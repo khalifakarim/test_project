@@ -60,7 +60,7 @@ class CarDealershipSaleAdmin(admin.ModelAdmin):
         "car_dealership",
         "sold_car",
         "customer",
-        "sale_time",
+        "creation_time",
     )
     list_filter = (
         "sold_car__model",

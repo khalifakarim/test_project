@@ -1,8 +1,7 @@
-from django.core.validators import MinValueValidator, MaxValueValidator
 from django_countries.fields import CountryField
 from django.db import models
 
-from provider.models import Car, SoftDelete, CreatedAt, UpdateAt
+from provider.models import Car, SoftDelete, CreatedAt, UpdateAt, Action
 from core.enums import Carcase
 
 
@@ -10,7 +9,7 @@ class Location(models.Model):
     country = CountryField()
     city = models.CharField(max_length=150)
     street = models.CharField(max_length=150)
-    building_number = models.IntegerField()
+    building_number = models.PositiveSmallIntegerField()
 
     class Meta:
         unique_together = ["country", "city", "street", "building_number"]
@@ -33,13 +32,17 @@ class CarDealership(SoftDelete, CreatedAt, UpdateAt):
         through="CarDealershipSale",
         through_fields=("car_dealership", "sold_car"),
     )
-    customers = models.ManyToManyField("client.User")
+    customers = models.ManyToManyField(
+        "client.User",
+        related_name="car_dealerships",
+    )
 
     def __str__(self):
         return self.name
 
 
 class CarDealershipSale(SoftDelete, CreatedAt, UpdateAt):
+    cars_quantity = models.PositiveSmallIntegerField()
     sold_car = models.ForeignKey(
         Car,
         on_delete=models.PROTECT,
@@ -54,13 +57,13 @@ class CarDealershipSale(SoftDelete, CreatedAt, UpdateAt):
     car_dealership = models.ForeignKey(
         CarDealership, on_delete=models.CASCADE, related_name="sales"
     )
-    sale_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.sold_car
 
 
 class CarDealershipBuy(SoftDelete, CreatedAt, UpdateAt):
+    cars_quantity = models.PositiveSmallIntegerField()
     car_dealership = models.ForeignKey(
         CarDealership, on_delete=models.CASCADE, related_name="purchases"
     )
@@ -78,21 +81,10 @@ class CarDealershipBuy(SoftDelete, CreatedAt, UpdateAt):
         return self.bought_car
 
 
-class CarDealershipAction(SoftDelete, CreatedAt, UpdateAt):
-    title = models.CharField(max_length=255, unique=True)
-    description = models.TextField()
-    cars = models.ManyToManyField(Car)
+class CarDealershipAction(Action, SoftDelete, CreatedAt, UpdateAt):
     car_dealership = models.ForeignKey(
         CarDealership,
         on_delete=models.SET_NULL,
-        related_name="action",
+        related_name="actions",
         null=True,
     )
-    action_start_time = models.DateTimeField()
-    action_end_time = models.DateTimeField()
-    discount_percentage = models.IntegerField(
-        default=1, validators=[MinValueValidator(1), MaxValueValidator(100)]
-    )
-
-    def __str__(self):
-        return self.title

@@ -1,13 +1,13 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
-from core.models import SoftDelete, CreatedAt, UpdateAt
+from core.models import SoftDelete, CreatedAt, UpdateAt, Action
 from core.enums import Carcase, State
 
 
 class Manufacturer(SoftDelete, CreatedAt, UpdateAt):
-    description = models.TextField()
     name = models.CharField(max_length=150, unique=True)
+    description = models.TextField(blank=True)
     location = models.ForeignKey(
         "car_dealerships.Location",
         on_delete=models.SET_NULL,
@@ -25,34 +25,29 @@ class Car(SoftDelete, CreatedAt, UpdateAt):
     carcase = models.CharField(max_length=25, choices=Carcase.choices())
     state = models.CharField(max_length=25, choices=State.choices())
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    production_date = models.DateTimeField()
 
     def __str__(self):
         return self.model
 
 
 class Provider(SoftDelete, CreatedAt, UpdateAt):
-    description = models.TextField()
     name = models.CharField(max_length=150, unique=True)
+    description = models.TextField(blank=True)
     foundation_time = models.DateTimeField()
-    cars = models.ManyToManyField(Car)
-    customers = models.ManyToManyField("car_dealerships.CarDealership")
+    cars = models.ManyToManyField(Car, related_name="providers")
+    customers = models.ManyToManyField(
+        "car_dealerships.CarDealership",
+        related_name="providers",
+    )
 
     def __str__(self):
         return self.name
 
 
-class ProviderAction(SoftDelete, CreatedAt, UpdateAt):
-    title = models.CharField(max_length=255, unique=True)
-    description = models.TextField()
-    cars = models.ManyToManyField(Car)
+class ProviderAction(Action, SoftDelete, CreatedAt, UpdateAt):
     provider = models.ForeignKey(
-        Provider, on_delete=models.CASCADE, related_name="actions"
+        Provider,
+        on_delete=models.CASCADE,
+        related_name="actions",
     )
-    action_start_time = models.DateTimeField()
-    action_end_time = models.DateTimeField()
-    discount_percentage = models.IntegerField(
-        default=1, validators=[MinValueValidator(1), MaxValueValidator(100)]
-    )
-
-    def __str__(self):
-        return self.title

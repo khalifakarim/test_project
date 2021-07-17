@@ -25,7 +25,7 @@ class Offer(SoftDelete, CreatedAt, UpdateAt):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name="offer",
+        related_name="offers",
     )
     max_price = models.DecimalField(
         max_digits=10,
@@ -35,7 +35,6 @@ class Offer(SoftDelete, CreatedAt, UpdateAt):
     car = models.ForeignKey(
         Car,
         on_delete=models.CASCADE,
-        related_name="offer",
     )
 
     def __str__(self):
