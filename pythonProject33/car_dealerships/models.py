@@ -2,7 +2,6 @@ from django_countries.fields import CountryField
 from django.db import models
 
 from provider.models import Car, SoftDelete, CreatedAt, UpdateAt, Action
-from core.enums import Carcase
 
 
 class Location(models.Model):
@@ -12,7 +11,7 @@ class Location(models.Model):
     building_number = models.PositiveSmallIntegerField()
 
     class Meta:
-        unique_together = ["country", "city", "street", "building_number"]
+        unique_together = ("country", "city", "street", "building_number")
 
     def __str__(self):
         return f"{self.country} {self.city} {self.street} {self.building_number}"
@@ -24,9 +23,7 @@ class CarDealership(SoftDelete, CreatedAt, UpdateAt):
     location = models.ForeignKey(
         Location, on_delete=models.SET_NULL, related_name="+", null=True
     )
-    preferred_manufacturer = models.JSONField()
-    preferred_model = models.JSONField()
-    preferred_carcase = models.JSONField(choices=Carcase.choices())
+    preferred_characteristics = models.JSONField()
     cars = models.ManyToManyField(
         Car,
         through="CarDealershipSale",

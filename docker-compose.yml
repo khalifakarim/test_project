@@ -4,7 +4,7 @@ services:
   db:
     image: postgres
     volumes:
-      - ./pythonProject33/data/db:/var/lib/postgresql/data
+      - ./pythonProject33/pg_data:/var/lib/postgresql/data
     env_file:
       - pythonProject33/.env
 

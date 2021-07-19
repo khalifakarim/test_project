@@ -2,7 +2,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 from core.models import SoftDelete, CreatedAt, UpdateAt, Action
-from core.enums import Carcase, State
+from core.enums import Carcase, State, Engine
 
 
 class Manufacturer(SoftDelete, CreatedAt, UpdateAt):
@@ -16,16 +16,27 @@ class Manufacturer(SoftDelete, CreatedAt, UpdateAt):
     )
     foundation_time = models.DateTimeField()
 
+    def __str__(self):
+        return self.name
+
 
 class Car(SoftDelete, CreatedAt, UpdateAt):
     manufacturer = models.ForeignKey(
-        Manufacturer, on_delete=models.PROTECT, related_name="cars"
+        Manufacturer,
+        on_delete=models.PROTECT,
+        related_name="cars",
     )
     model = models.CharField(max_length=50)
-    carcase = models.CharField(max_length=25, choices=Carcase.choices())
-    state = models.CharField(max_length=25, choices=State.choices())
+    carcase = models.CharField(max_length=13, choices=Carcase.choices())
+    state = models.CharField(max_length=13, choices=State.choices())
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    production_date = models.DateTimeField()
+    production_date = models.DateTimeField(
+        validators=(MinValueValidator(1950), MaxValueValidator(2021))
+    )
+    type_of_engine = models.CharField(max_length=15, choices=Engine.choices())
+    horse_power = models.IntegerField(
+        validators=(MinValueValidator(50), (MinValueValidator(1600)))
+    )
 
     def __str__(self):
         return self.model

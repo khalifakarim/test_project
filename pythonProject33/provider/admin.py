@@ -9,7 +9,6 @@ class CarAdmin(admin.ModelAdmin):
         "model",
         "carcase",
         "state",
-        "manufacturer__name",
         "price",
     )
     list_filter = (
@@ -17,7 +16,7 @@ class CarAdmin(admin.ModelAdmin):
         "model",
     )
     search_fields = (
-        "manufacturer",
+        "manufacturer__name",
         "model",
     )
 

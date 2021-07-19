@@ -20,3 +20,10 @@ class State(BaseEnum):
     WITH_MILEAGE = "with mileage"
     BROKEN = "broken"
     TOTAL = "total"
+
+
+class Engine(BaseEnum):
+    PETROL = "petrol engine"
+    DIESEL = "diesel engine"
+    GAS = "gas engine"
+    ELECTRIC = "electric engine"
