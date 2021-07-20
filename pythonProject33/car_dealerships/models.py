@@ -1,7 +1,11 @@
 from django_countries.fields import CountryField
 from django.db import models
 
-from core.abstract_models.base_abstract_models import SoftDelete, CreatedAt, UpdateAt
+from core.abstract_models.base_abstract_models import (
+    SoftDelete,
+    CreatedAt,
+    UpdateAt,
+)
 from core.abstract_models.abstract_models import Action
 from provider.models import Car
 
@@ -28,7 +32,7 @@ class CarDealership(SoftDelete, CreatedAt, UpdateAt):
     preferred_characteristics = models.JSONField()
     cars = models.ManyToManyField(
         Car,
-        through="CarDealershipSale",
+        through="AvailableCars",
         through_fields=("car_dealership", "sold_car"),
         related_name='+',
     )
@@ -39,6 +43,23 @@ class CarDealership(SoftDelete, CreatedAt, UpdateAt):
 
     def __str__(self):
         return self.name
+
+
+class AvailableCars(SoftDelete, CreatedAt, UpdateAt):
+    cars_quantity = models.PositiveSmallIntegerField()
+    sold_car = models.ForeignKey(
+        Car,
+        on_delete=models.SET_NULL,
+        related_name="+",
+        null=True,
+    )
+    car_dealership = models.ForeignKey(
+        CarDealership,
+        on_delete=models.CASCADE,
+    )
+
+    def __str__(self):
+        return f'{self.car_dealership} - {self.sold_car}'
 
 
 class CarDealershipSale(SoftDelete, CreatedAt, UpdateAt):

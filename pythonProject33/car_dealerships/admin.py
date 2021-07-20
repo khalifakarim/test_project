@@ -36,7 +36,6 @@ class CarDealershipAdmin(admin.ModelAdmin):
         "name",
         "balance",
         "location",
-        "preferred_characteristics",
     )
     list_filter = (
         "location__city",

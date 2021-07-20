@@ -1,4 +1,4 @@
-from base_enum import BaseEnum
+from core.enums.base_enum import BaseEnum
 
 
 class Carcase(BaseEnum):
@@ -21,8 +21,3 @@ class Engine(BaseEnum):
     DIESEL = "diesel engine"
     GAS = "gas engine"
     ELECTRIC = "electric engine"
-
-
-class Gender(BaseEnum):
-    MALE = "MALE"
-    FEMALE = "FEMALE"

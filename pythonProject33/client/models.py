@@ -2,11 +2,12 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from core.abstract_models.base_abstract_models import (SoftDelete,
-                                                       CreatedAt,
-                                                       UpdateAt,
-                                                       )
-from core.enums.enums import Gender
+from core.abstract_models.base_abstract_models import (
+    SoftDelete,
+    CreatedAt,
+    UpdateAt,
+)
+from core.enums.customer import Gender
 from provider.models import Car
 
 
@@ -19,8 +20,10 @@ class User(AbstractUser, SoftDelete, CreatedAt, UpdateAt):
         decimal_places=2,
         default=0,
     )
-    age = models.PositiveSmallIntegerField(validators=(MinValueValidator(18), MaxValueValidator(100)))
-    gender = models.CharField(choices=Gender.choices())
+    age = models.PositiveSmallIntegerField(
+        validators=(MinValueValidator(18), MaxValueValidator(100))
+    )
+    gender = models.CharField(choices=Gender.choices(), max_length=6)
     birthday = models.DateTimeField()
 
     USERNAME_FIELD = "email"
