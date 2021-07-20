@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import (
+from car_dealerships.models import (
     CarDealershipAction,
     CarDealershipSale,
     CarDealershipBuy,
