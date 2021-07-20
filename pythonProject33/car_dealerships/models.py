@@ -1,7 +1,7 @@
 from django_countries.fields import CountryField
 from django.db import models
 
-from core.abstract_models.abstract_models import BaseCarRelation, CarDealershipHistory
+from core.abstract_models.abstract_models import BaseCarRelation, CarDealershipDeal
 from core.abstract_models.abstract_models import Action
 from provider.models import Car
 
@@ -58,7 +58,7 @@ class AvailableCars(SoftDelete, CreatedAt, UpdateAt, BaseCarRelation):
         return f'{self.car_dealership} - {self.car}'
 
 
-class CarDealershipSale(SoftDelete, CreatedAt, UpdateAt, CarDealershipHistory):
+class CarDealershipSale(SoftDelete, CreatedAt, UpdateAt, CarDealershipDeal):
     customer = models.ForeignKey(
         "client.User",
         on_delete=models.SET_NULL,
@@ -73,7 +73,7 @@ class CarDealershipSale(SoftDelete, CreatedAt, UpdateAt, CarDealershipHistory):
         return f'{self.car} - {self.customer} - {self.car_dealership}'
 
 
-class CarDealershipBuy(SoftDelete, CreatedAt, UpdateAt, CarDealershipHistory):
+class CarDealershipBuy(SoftDelete, CreatedAt, UpdateAt, CarDealershipDeal):
     car_dealership = models.ForeignKey(
         CarDealership, on_delete=models.CASCADE, related_name="purchases"
     )

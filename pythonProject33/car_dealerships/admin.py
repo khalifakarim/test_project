@@ -96,7 +96,6 @@ class CarDealershipBuyAdmin(admin.ModelAdmin):
 class CarDealershipActionAdmin(admin.ModelAdmin):
     list_display = (
         "title",
-        "description",
         "action_start_time",
         "action_end_time",
         "discount_percentage",
