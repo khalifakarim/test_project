@@ -1,13 +1,15 @@
 from django_countries.fields import CountryField
 from django.db import models
 
+from core.abstract_models.abstract_models import CarAbstract
+from core.abstract_models.abstract_models import Action
+from provider.models import Car
+
 from core.abstract_models.base_abstract_models import (
     SoftDelete,
     CreatedAt,
     UpdateAt,
 )
-from core.abstract_models.abstract_models import Action
-from provider.models import Car
 
 
 class Location(models.Model):
@@ -33,7 +35,7 @@ class CarDealership(SoftDelete, CreatedAt, UpdateAt):
     cars = models.ManyToManyField(
         Car,
         through="AvailableCars",
-        through_fields=("car_dealership", "sold_car"),
+        through_fields=("car_dealership", "car"),
         related_name='+',
     )
     customers = models.ManyToManyField(
@@ -45,21 +47,15 @@ class CarDealership(SoftDelete, CreatedAt, UpdateAt):
         return self.name
 
 
-class AvailableCars(SoftDelete, CreatedAt, UpdateAt):
+class AvailableCars(SoftDelete, CreatedAt, UpdateAt, CarAbstract):
     cars_quantity = models.PositiveSmallIntegerField()
-    sold_car = models.ForeignKey(
-        Car,
-        on_delete=models.SET_NULL,
-        related_name="+",
-        null=True,
-    )
     car_dealership = models.ForeignKey(
         CarDealership,
         on_delete=models.CASCADE,
     )
 
     def __str__(self):
-        return f'{self.car_dealership} - {self.sold_car}'
+        return f'{self.car_dealership} - {self.car}'
 
 
 class CarDealershipSale(SoftDelete, CreatedAt, UpdateAt):

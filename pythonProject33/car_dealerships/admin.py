@@ -4,6 +4,7 @@ from .models import (
     CarDealershipAction,
     CarDealershipSale,
     CarDealershipBuy,
+    AvailableCars,
     CarDealership,
     Location,
 )
@@ -110,4 +111,24 @@ class CarDealershipActionAdmin(admin.ModelAdmin):
         "car_dealership__name",
         "cars__model",
         "cars__manufacturer__name",
+    )
+
+
+@admin.register(AvailableCars)
+class AvailableCarsAdmin(admin.ModelAdmin):
+    list_display = (
+        "cars_quantity",
+        "price",
+        "car",
+        "car_dealership"
+    )
+    list_filter = (
+        "is_active",
+    )
+    search_fields = (
+        "car_dealership__name"
+        "car__manufacturer__name",
+        "car__model",
+        "car__state",
+        "car__carcase",
     )

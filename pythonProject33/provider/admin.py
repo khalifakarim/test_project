@@ -1,6 +1,12 @@
 from django.contrib import admin
 
-from provider.models import Car, Provider, ProviderAction, Manufacturer
+from provider.models import (
+    Car,
+    Provider,
+    ProviderAction,
+    Manufacturer,
+    CarPrice
+)
 
 
 @admin.register(Car)
@@ -70,3 +76,24 @@ class ManufacturerAdmin(admin.ModelAdmin):
     )
     list_filter = ("is_active",)
     search_fields = ("name",)
+
+
+@admin.register(CarPrice)
+class CarPriceAdmin(admin.ModelAdmin):
+    list_display = (
+        "provider",
+        "price",
+        "car",
+    )
+    list_filter = (
+        "is_active",
+    )
+    search_fields = (
+        "provider__name"
+        "car__manufacturer__name",
+        "car__model",
+        "car__state",
+        "car__carcase",
+    )
+
+

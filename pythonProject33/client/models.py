@@ -2,13 +2,14 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+from core.enums.customer import Gender
+from provider.models import Car
+
 from core.abstract_models.base_abstract_models import (
     SoftDelete,
     CreatedAt,
     UpdateAt,
 )
-from core.enums.customer import Gender
-from provider.models import Car
 
 
 class User(AbstractUser, SoftDelete, CreatedAt, UpdateAt):

@@ -1,13 +1,15 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
+from core.abstract_models.abstract_models import CarAbstract
+from core.abstract_models.abstract_models import Action
+from core.enums.car import Carcase, State, Engine
+
 from core.abstract_models.base_abstract_models import (
     SoftDelete,
     CreatedAt,
     UpdateAt,
 )
-from core.abstract_models.abstract_models import Action
-from core.enums.car import Carcase, State, Engine
 
 
 class Manufacturer(SoftDelete, CreatedAt, UpdateAt):
@@ -66,19 +68,12 @@ class Provider(SoftDelete, CreatedAt, UpdateAt):
         return self.name
 
 
-class CarPrice(SoftDelete, CreatedAt, UpdateAt):
+class CarPrice(SoftDelete, CreatedAt, UpdateAt, CarAbstract):
     provider = models.ForeignKey(
         Provider,
         related_name="prices",
         on_delete=models.CASCADE,
     )
-    car = models.ForeignKey(
-        Car,
-        related_name="+",
-        on_delete=models.CASCADE,
-        null=True,
-    )
-    price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
         return f'{self.provider} - {self.car} - {self.price}'
