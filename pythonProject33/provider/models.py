@@ -1,8 +1,9 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
-from core.models import SoftDelete, CreatedAt, UpdateAt, Action
-from core.enums import Carcase, State, Engine
+from core.abstract_models.base_abstract_models import SoftDelete, CreatedAt, UpdateAt
+from core.abstract_models.abstract_models import Action
+from core.enums.enums import Carcase, State, Engine
 
 
 class Manufacturer(SoftDelete, CreatedAt, UpdateAt):
@@ -30,16 +31,16 @@ class Car(SoftDelete, CreatedAt, UpdateAt):
     carcase = models.CharField(max_length=13, choices=Carcase.choices())
     state = models.CharField(max_length=13, choices=State.choices())
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    production_date = models.DateTimeField(
+    production_date = models.IntegerField(
         validators=(MinValueValidator(1950), MaxValueValidator(2021))
     )
     type_of_engine = models.CharField(max_length=15, choices=Engine.choices())
     horse_power = models.IntegerField(
-        validators=(MinValueValidator(50), (MinValueValidator(1600)))
+        validators=(MinValueValidator(50), MaxValueValidator(1600))
     )
 
     def __str__(self):
-        return self.model
+        return f'{self.manufacturer.name} - {self.model} - {self.carcase} - {self.state}'
 
 
 class Provider(SoftDelete, CreatedAt, UpdateAt):

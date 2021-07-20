@@ -1,7 +1,9 @@
 from django_countries.fields import CountryField
 from django.db import models
 
-from provider.models import Car, SoftDelete, CreatedAt, UpdateAt, Action
+from core.abstract_models.base_abstract_models import SoftDelete, CreatedAt, UpdateAt
+from core.abstract_models.abstract_models import Action
+from provider.models import Car
 
 
 class Location(models.Model):
@@ -28,6 +30,7 @@ class CarDealership(SoftDelete, CreatedAt, UpdateAt):
         Car,
         through="CarDealershipSale",
         through_fields=("car_dealership", "sold_car"),
+        related_name='+',
     )
     customers = models.ManyToManyField(
         "client.User",
@@ -42,8 +45,9 @@ class CarDealershipSale(SoftDelete, CreatedAt, UpdateAt):
     cars_quantity = models.PositiveSmallIntegerField()
     sold_car = models.ForeignKey(
         Car,
-        on_delete=models.PROTECT,
+        on_delete=models.SET_NULL,
         related_name="+",
+        null=True,
     )
     customer = models.ForeignKey(
         "client.User",
@@ -54,9 +58,10 @@ class CarDealershipSale(SoftDelete, CreatedAt, UpdateAt):
     car_dealership = models.ForeignKey(
         CarDealership, on_delete=models.CASCADE, related_name="sales"
     )
+    price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return self.sold_car
+        return f'{self.sold_car} - {self.customer} - {self.car_dealership}'
 
 
 class CarDealershipBuy(SoftDelete, CreatedAt, UpdateAt):
@@ -73,6 +78,7 @@ class CarDealershipBuy(SoftDelete, CreatedAt, UpdateAt):
         related_name="sales",
         null=True,
     )
+    price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
         return self.bought_car
@@ -81,7 +87,7 @@ class CarDealershipBuy(SoftDelete, CreatedAt, UpdateAt):
 class CarDealershipAction(Action, SoftDelete, CreatedAt, UpdateAt):
     car_dealership = models.ForeignKey(
         CarDealership,
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         related_name="actions",
         null=True,
     )

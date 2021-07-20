@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Car, Provider, ProviderAction, Manufacturer
+from provider.models import Car, Provider, ProviderAction, Manufacturer
 
 
 @admin.register(Car)
@@ -24,7 +24,6 @@ class CarAdmin(admin.ModelAdmin):
 @admin.register(Provider)
 class ProviderAdmin(admin.ModelAdmin):
     list_display = (
-        "description",
         "name",
         "foundation_time",
     )
@@ -44,9 +43,7 @@ class ProviderAdmin(admin.ModelAdmin):
 @admin.register(ProviderAction)
 class ProviderActionAdmin(admin.ModelAdmin):
     list_display = (
-        "provider",
         "title",
-        "description",
         "action_start_time",
         "action_end_time",
         "discount_percentage",
@@ -67,7 +64,6 @@ class ProviderActionAdmin(admin.ModelAdmin):
 @admin.register(Manufacturer)
 class ManufacturerAdmin(admin.ModelAdmin):
     list_display = (
-        "description",
         "name",
         "location",
         "foundation_time",
