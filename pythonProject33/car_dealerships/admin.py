@@ -55,40 +55,40 @@ class CarDealershipAdmin(admin.ModelAdmin):
 class CarDealershipSaleAdmin(admin.ModelAdmin):
     list_display = (
         "car_dealership",
-        "sold_car",
+        "car",
         "customer",
         "creation_time",
     )
     list_filter = (
-        "sold_car__model",
-        "sold_car__manufacturer__name",
+        "car__model",
+        "car__manufacturer__name",
         "car_dealership__name",
     )
     search_fields = (
         "car_dealership__name",
         "customer__email",
-        "sold_car__model",
-        "sold_car__manufacturer__name",
+        "car__model",
+        "car__manufacturer__name",
     )
 
 
 @admin.register(CarDealershipBuy)
 class CarDealershipBuyAdmin(admin.ModelAdmin):
     list_display = (
-        "bought_car",
+        "car",
         "car_dealership",
         "provider",
         "creation_time",
     )
     list_filter = (
-        "bought_car__model",
-        "bought_car__manufacturer__name",
+        "car__model",
+        "car__manufacturer__name",
         "provider__name",
     )
     search_fields = (
         "provider__name",
-        "bought_car__model",
-        "bought_car__manufacturer__name",
+        "car__model",
+        "car__manufacturer__name",
     )
 
 

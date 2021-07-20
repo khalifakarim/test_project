@@ -1,7 +1,7 @@
 from django_countries.fields import CountryField
 from django.db import models
 
-from core.abstract_models.abstract_models import CarAbstract
+from core.abstract_models.abstract_models import BaseCarRelation, CarDealershipHistory
 from core.abstract_models.abstract_models import Action
 from provider.models import Car
 
@@ -47,7 +47,7 @@ class CarDealership(SoftDelete, CreatedAt, UpdateAt):
         return self.name
 
 
-class AvailableCars(SoftDelete, CreatedAt, UpdateAt, CarAbstract):
+class AvailableCars(SoftDelete, CreatedAt, UpdateAt, BaseCarRelation):
     cars_quantity = models.PositiveSmallIntegerField()
     car_dealership = models.ForeignKey(
         CarDealership,
@@ -58,14 +58,7 @@ class AvailableCars(SoftDelete, CreatedAt, UpdateAt, CarAbstract):
         return f'{self.car_dealership} - {self.car}'
 
 
-class CarDealershipSale(SoftDelete, CreatedAt, UpdateAt):
-    cars_quantity = models.PositiveSmallIntegerField()
-    sold_car = models.ForeignKey(
-        Car,
-        on_delete=models.SET_NULL,
-        related_name="+",
-        null=True,
-    )
+class CarDealershipSale(SoftDelete, CreatedAt, UpdateAt, CarDealershipHistory):
     customer = models.ForeignKey(
         "client.User",
         on_delete=models.SET_NULL,
@@ -75,19 +68,14 @@ class CarDealershipSale(SoftDelete, CreatedAt, UpdateAt):
     car_dealership = models.ForeignKey(
         CarDealership, on_delete=models.CASCADE, related_name="sales"
     )
-    price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return f'{self.sold_car} - {self.customer} - {self.car_dealership}'
+        return f'{self.car} - {self.customer} - {self.car_dealership}'
 
 
-class CarDealershipBuy(SoftDelete, CreatedAt, UpdateAt):
-    cars_quantity = models.PositiveSmallIntegerField()
+class CarDealershipBuy(SoftDelete, CreatedAt, UpdateAt, CarDealershipHistory):
     car_dealership = models.ForeignKey(
         CarDealership, on_delete=models.CASCADE, related_name="purchases"
-    )
-    bought_car = models.ForeignKey(
-        Car, on_delete=models.SET_NULL, related_name="+", null=True
     )
     provider = models.ForeignKey(
         "provider.Provider",
@@ -95,10 +83,9 @@ class CarDealershipBuy(SoftDelete, CreatedAt, UpdateAt):
         related_name="sales",
         null=True,
     )
-    price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return self.bought_car
+        return f'{self.car} - {self.provider} - {self.car_dealership}'
 
 
 class CarDealershipAction(Action, SoftDelete, CreatedAt, UpdateAt):

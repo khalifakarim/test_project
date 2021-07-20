@@ -1,11 +1,12 @@
 from django.contrib import admin
 
 from provider.models import (
-    Car,
-    Provider,
     ProviderAction,
     Manufacturer,
-    CarPrice
+    Provider,
+    CarPrice,
+    Car,
+
 )
 
 
@@ -95,5 +96,3 @@ class CarPriceAdmin(admin.ModelAdmin):
         "car__state",
         "car__carcase",
     )
-
-

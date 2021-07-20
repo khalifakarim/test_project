@@ -1,7 +1,7 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
-from core.abstract_models.abstract_models import CarAbstract
+from core.abstract_models.abstract_models import BaseCarRelation
 from core.abstract_models.abstract_models import Action
 from core.enums.car import Carcase, State, Engine
 
@@ -68,7 +68,7 @@ class Provider(SoftDelete, CreatedAt, UpdateAt):
         return self.name
 
 
-class CarPrice(SoftDelete, CreatedAt, UpdateAt, CarAbstract):
+class CarPrice(SoftDelete, CreatedAt, UpdateAt, BaseCarRelation):
     provider = models.ForeignKey(
         Provider,
         related_name="prices",
@@ -85,3 +85,6 @@ class ProviderAction(Action, SoftDelete, CreatedAt, UpdateAt):
         on_delete=models.CASCADE,
         related_name="actions",
     )
+
+    def __str__(self):
+        return f'{self.provider} - {self.title} - {self.action_start_time} - {self.action_end_time}'
