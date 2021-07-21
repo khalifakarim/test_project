@@ -20,12 +20,14 @@ class User(AbstractUser, SoftDelete, CreatedAt, UpdateAt):
         max_digits=10,
         decimal_places=2,
         default=0,
+        null=True
     )
     age = models.PositiveSmallIntegerField(
-        validators=(MinValueValidator(18), MaxValueValidator(100))
+        validators=(MinValueValidator(18), MaxValueValidator(100)),
+        null=True
     )
-    gender = models.CharField(choices=Gender.choices(), max_length=6)
-    birthday = models.DateTimeField()
+    gender = models.CharField(choices=Gender.choices(), max_length=6, null=True)
+    birthday = models.DateTimeField(null=True,)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["password", "username"]
