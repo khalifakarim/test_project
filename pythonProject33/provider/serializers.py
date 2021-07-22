@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from core.serializers.base import BaseSerializer
+
 from provider.models import (
     ProviderAction,
     Manufacturer,
@@ -10,30 +12,25 @@ from provider.models import (
 
 
 class ManufacturerSerializer(serializers.ModelSerializer):
-    class Meta:
+    class Meta(BaseSerializer.Meta):
         model = Manufacturer
-        exclude = ('creation_time', 'modification_time')
 
 
 class CarSerializer(serializers.ModelSerializer):
-    class Meta:
+    class Meta(BaseSerializer.Meta):
         model = Car
-        exclude = ('creation_time', 'modification_time')
 
 
 class ProviderSerializer(serializers.ModelSerializer):
-    class Meta:
+    class Meta(BaseSerializer.Meta):
         model = Provider
-        exclude = ('creation_time', 'modification_time')
 
 
 class CarPriceSerializer(serializers.ModelSerializer):
-    class Meta:
+    class Meta(BaseSerializer.Meta):
         model = CarPrice
-        exclude = ('creation_time', 'modification_time')
 
 
 class ProviderActionSerializer(serializers.ModelSerializer):
-    class Meta:
+    class Meta(BaseSerializer.Meta):
         model = ProviderAction
-        exclude = ('creation_time', 'modification_time')

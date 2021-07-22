@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from core.serializers.base import BaseSerializer
+
 from car_dealerships.models import (
     CarDealershipAction,
     CarDealershipSale,
@@ -10,6 +12,7 @@ from car_dealerships.models import (
 )
 
 
+
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
@@ -17,30 +20,25 @@ class LocationSerializer(serializers.ModelSerializer):
 
 
 class CarDealershipSerializer(serializers.ModelSerializer):
-    class Meta:
+    class Meta(BaseSerializer.Meta):
         model = CarDealership
-        exclude = ('creation_time', 'modification_time')
 
 
 class AvailableCarsSerializer(serializers.ModelSerializer):
-    class Meta:
+    class Meta(BaseSerializer.Meta):
         model = AvailableCars
-        exclude = ('creation_time', 'modification_time')
 
 
 class CarDealershipSaleSerializer(serializers.ModelSerializer):
-    class Meta:
+    class Meta(BaseSerializer.Meta):
         model = CarDealershipSale
-        exclude = ('creation_time', 'modification_time')
 
 
 class CarDealershipBuySerializer(serializers.ModelSerializer):
-    class Meta:
+    class Meta(BaseSerializer.Meta):
         model = CarDealershipBuy
-        exclude = ('creation_time', 'modification_time')
 
 
 class CarDealershipActionSerializer(serializers.ModelSerializer):
-    class Meta:
+    class Meta(BaseSerializer.Meta):
         model = CarDealershipAction
-        exclude = ('creation_time', 'modification_time')

@@ -18,4 +18,5 @@ router.register("buy-history", CarDealershipBuyViewSet)
 router.register("actions", CarDealershipActionViewSet)
 router.register("location", LocationViewSet)
 router.register("", CarDealershipViewSet)
-urlpatterns = [] + router.urls
+
+urlpatterns = router.urls

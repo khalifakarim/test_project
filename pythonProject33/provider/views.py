@@ -1,5 +1,7 @@
 from rest_framework import viewsets, mixins
 
+from core.views.mixins.base import SoftDeleteMixin
+
 from provider.serializers import (
     ProviderActionSerializer,
     ManufacturerSerializer,
@@ -17,28 +19,43 @@ from provider.models import (
 )
 
 
-class ManufacturerViewSet(viewsets.ModelViewSet):
+class ManufacturerViewSet(
+    SoftDeleteMixin,
+    viewsets.ModelViewSet,
+):
     serializer_class = ManufacturerSerializer
     queryset = Manufacturer.objects.all()
 
 
-class CarViewSet(viewsets.ModelViewSet):
+class CarViewSet(
+    SoftDeleteMixin,
+    viewsets.ModelViewSet
+):
     serializer_class = CarSerializer
     queryset = Car.objects.all()
 
 
-class ProviderViewSet(viewsets.ModelViewSet):
+class ProviderViewSet(
+    SoftDeleteMixin,
+    viewsets.ModelViewSet,
+):
     serializer_class = ProviderSerializer
     queryset = Provider.objects.all()
 
 
-class CarPriceViewSet(mixins.ListModelMixin,
-                      mixins.RetrieveModelMixin,
-                      viewsets.GenericViewSet):
+class CarPriceViewSet(
+    SoftDeleteMixin,
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet
+):
     serializer_class = CarPriceSerializer
     queryset = CarPrice.objects.all()
 
 
-class ProviderActionViewSet(viewsets.ModelViewSet):
+class ProviderActionViewSet(
+    SoftDeleteMixin,
+    viewsets.ModelViewSet,
+):
     serializer_class = ProviderActionSerializer
     queryset = ProviderAction.objects.all()
