@@ -1,17 +1,19 @@
-from rest_framework.routers import SimpleRouter
+from rest_framework.routers import DefaultRouter
 
 from provider.views import (
-    CRUDManufacturer,
-    CRUDCar,
-    CRUDProvider,
-    CRUDCarPrice,
-    CRUDProviderAction,
+    ProviderActionViewSet,
+    ManufacturerViewSet,
+    ProviderViewSet,
+    CarPriceViewSet,
+    CarViewSet,
 )
 
-router = SimpleRouter()
-router.register("manufacturer", CRUDManufacturer)
-router.register("cars", CRUDCar)
-router.register("providers", CRUDProvider)
-router.register("car-price", CRUDCarPrice)
-router.register("action", CRUDProviderAction)
+
+router = DefaultRouter()
+router.register("manufacturer", ManufacturerViewSet)
+router.register("action", ProviderActionViewSet)
+router.register("providers", ProviderViewSet)
+router.register("car-price", CarPriceViewSet)
+router.register("cars", CarViewSet)
+
 urlpatterns = [] + router.urls

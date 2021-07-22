@@ -9,7 +9,6 @@ class UserAdmin(admin.ModelAdmin):
     list_filter = (
         "email",
         "username",
-        "is_active"
     )
     search_fields = (
         "email",
