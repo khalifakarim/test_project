@@ -1,6 +1,8 @@
 from rest_framework import viewsets, mixins
 from core.views.mixins.base import SoftDeleteMixin
 
+from core.views.mixins.base import SerializerChooseMixin
+
 from car_dealerships.models import (
     CarDealershipAction,
     CarDealershipSale,
@@ -11,10 +13,12 @@ from car_dealerships.models import (
 )
 
 from car_dealerships.serializers import (
-    CarDealershipActionSerializer,
+    CarDealershipActionCreateSerializer,
+    CarDealershipActionReadSerializer,
+    CarDealershipCreateSerializer,
+    CarDealershipReadSerializer,
     CarDealershipSaleSerializer,
     CarDealershipBuySerializer,
-    CarDealershipSerializer,
     AvailableCarsSerializer,
     LocationSerializer,
 )
@@ -29,17 +33,17 @@ class LocationViewSet(
 
 class CarDealershipViewSet(
     SoftDeleteMixin,
+    SerializerChooseMixin,
     viewsets.ModelViewSet
 ):
-    serializer_class = CarDealershipSerializer
     queryset = CarDealership.objects.all()
+    read_only_serializer = CarDealershipReadSerializer
+    write_serializer = CarDealershipCreateSerializer
 
 
 class AvailableCarsViewSet(
     SoftDeleteMixin,
-    mixins.ListModelMixin,
-    mixins.RetrieveModelMixin,
-    viewsets.GenericViewSet
+    viewsets.ReadOnlyModelViewSet
 ):
     serializer_class = AvailableCarsSerializer
     queryset = AvailableCars.objects.all()
@@ -47,9 +51,7 @@ class AvailableCarsViewSet(
 
 class CarDealershipSaleViewSet(
     SoftDeleteMixin,
-    mixins.ListModelMixin,
-    mixins.RetrieveModelMixin,
-    viewsets.GenericViewSet
+    viewsets.ReadOnlyModelViewSet
 ):
     serializer_class = CarDealershipSaleSerializer
     queryset = CarDealershipSale.objects.all()
@@ -57,9 +59,7 @@ class CarDealershipSaleViewSet(
 
 class CarDealershipBuyViewSet(
     SoftDeleteMixin,
-    mixins.ListModelMixin,
-    mixins.RetrieveModelMixin,
-    viewsets.GenericViewSet
+    viewsets.ReadOnlyModelViewSet
 ):
     serializer_class = CarDealershipBuySerializer
     queryset = CarDealershipBuy.objects.all()
@@ -67,7 +67,9 @@ class CarDealershipBuyViewSet(
 
 class CarDealershipActionViewSet(
     SoftDeleteMixin,
+    SerializerChooseMixin,
     viewsets.ModelViewSet
 ):
-    serializer_class = CarDealershipActionSerializer
     queryset = CarDealershipAction.objects.all()
+    read_only_serializer = CarDealershipActionReadSerializer
+    write_serializer = CarDealershipActionCreateSerializer

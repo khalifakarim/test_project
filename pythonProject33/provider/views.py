@@ -1,13 +1,16 @@
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets
 
-from core.views.mixins.base import SoftDeleteMixin
+from core.views.mixins.base import SoftDeleteMixin, SerializerChooseMixin
 
 from provider.serializers import (
-    ProviderActionSerializer,
+    ProviderActionCreateSerializer,
+    ProviderActionReadSerializer,
+    ProviderCreateSerializer,
+    ProviderReadSerializer,
     ManufacturerSerializer,
-    ProviderSerializer,
+    CarCreateSerializer,
     CarPriceSerializer,
-    CarSerializer,
+    CarReadSerializer,
 )
 
 from provider.models import (
@@ -29,25 +32,27 @@ class ManufacturerViewSet(
 
 class CarViewSet(
     SoftDeleteMixin,
+    SerializerChooseMixin,
     viewsets.ModelViewSet
 ):
-    serializer_class = CarSerializer
     queryset = Car.objects.all()
+    read_only_serializer = CarReadSerializer
+    write_serializer = CarCreateSerializer
 
 
 class ProviderViewSet(
     SoftDeleteMixin,
+    SerializerChooseMixin,
     viewsets.ModelViewSet,
 ):
-    serializer_class = ProviderSerializer
     queryset = Provider.objects.all()
+    read_only_serializer = ProviderReadSerializer
+    write_serializer = ProviderCreateSerializer
 
 
 class CarPriceViewSet(
     SoftDeleteMixin,
-    mixins.ListModelMixin,
-    mixins.RetrieveModelMixin,
-    viewsets.GenericViewSet
+    viewsets.ReadOnlyModelViewSet,
 ):
     serializer_class = CarPriceSerializer
     queryset = CarPrice.objects.all()
@@ -55,7 +60,9 @@ class CarPriceViewSet(
 
 class ProviderActionViewSet(
     SoftDeleteMixin,
+    SerializerChooseMixin,
     viewsets.ModelViewSet,
 ):
-    serializer_class = ProviderActionSerializer
     queryset = ProviderAction.objects.all()
+    read_only_serializer = ProviderActionReadSerializer
+    write_serializer = ProviderActionCreateSerializer

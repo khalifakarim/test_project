@@ -32,12 +32,6 @@ class CarDealership(SoftDelete, CreatedAt, UpdateAt):
         Location, on_delete=models.SET_NULL, related_name="+", null=True
     )
     preferred_characteristics = models.JSONField()
-    cars = models.ManyToManyField(
-        Car,
-        through="AvailableCars",
-        through_fields=("car_dealership", "car"),
-        related_name='+',
-    )
     customers = models.ManyToManyField(
         "client.User",
         related_name="car_dealerships",
@@ -52,6 +46,7 @@ class AvailableCars(SoftDelete, CreatedAt, UpdateAt, BaseCarRelation):
     car_dealership = models.ForeignKey(
         CarDealership,
         on_delete=models.CASCADE,
+        related_name='cars',
     )
 
     def __str__(self):

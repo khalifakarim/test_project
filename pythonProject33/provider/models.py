@@ -53,12 +53,6 @@ class Provider(SoftDelete, CreatedAt, UpdateAt):
     name = models.CharField(max_length=150, unique=True)
     description = models.TextField(blank=True)
     foundation_time = models.DateTimeField()
-    cars = models.ManyToManyField(
-        Car,
-        through="CarPrice",
-        through_fields=("provider", "car"),
-        related_name="providers",
-    )
     customers = models.ManyToManyField(
         "car_dealerships.CarDealership",
         related_name="providers",
@@ -71,7 +65,7 @@ class Provider(SoftDelete, CreatedAt, UpdateAt):
 class CarPrice(SoftDelete, CreatedAt, UpdateAt, BaseCarRelation):
     provider = models.ForeignKey(
         Provider,
-        related_name="prices",
+        related_name="cars",
         on_delete=models.CASCADE,
     )
 
