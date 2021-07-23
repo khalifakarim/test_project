@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from core.serializers.base import SoftDeleteSerializer
 from core.serializers.base import BaseSerializer
 
 from provider.models import (
@@ -11,7 +12,7 @@ from provider.models import (
 )
 
 
-class ManufacturerSerializer(serializers.ModelSerializer):
+class ManufacturerSerializer(SoftDeleteSerializer):
     class Meta(BaseSerializer.Meta):
         model = Manufacturer
 
@@ -23,7 +24,9 @@ class CarReadSerializer(serializers.ModelSerializer):
         model = Car
 
 
-class CarCreateSerializer(serializers.ModelSerializer):
+class CarCreateSerializer(SoftDeleteSerializer):
+    is_active = serializers.BooleanField(default=True)
+
     class Meta(BaseSerializer.Meta):
         model = Car
 
@@ -33,7 +36,7 @@ class CarPriceSerializer(serializers.ModelSerializer):
         model = CarPrice
 
 
-class ProviderCreateSerializer(serializers.ModelSerializer):
+class ProviderCreateSerializer(SoftDeleteSerializer):
     class Meta(BaseSerializer.Meta):
         model = Provider
 
@@ -53,6 +56,6 @@ class ProviderActionReadSerializer(serializers.ModelSerializer):
         model = ProviderAction
 
 
-class ProviderActionCreateSerializer(serializers.ModelSerializer):
+class ProviderActionCreateSerializer(SoftDeleteSerializer):
     class Meta(BaseSerializer.Meta):
         model = ProviderAction

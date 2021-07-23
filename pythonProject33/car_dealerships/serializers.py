@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from provider.serializers import CarReadSerializer, ProviderCreateSerializer
+from core.serializers.base import SoftDeleteSerializer
 from core.serializers.base import BaseSerializer
 from client.serializers import UserSerializer
 
@@ -34,7 +35,7 @@ class CarDealershipReadSerializer(serializers.ModelSerializer):
         model = CarDealership
 
 
-class CarDealershipCreateSerializer(serializers.ModelSerializer):
+class CarDealershipCreateSerializer(SoftDeleteSerializer):
     class Meta(BaseSerializer.Meta):
         model = CarDealership
 
@@ -65,6 +66,6 @@ class CarDealershipActionReadSerializer(serializers.ModelSerializer):
         model = CarDealershipAction
 
 
-class CarDealershipActionCreateSerializer(serializers.ModelSerializer):
+class CarDealershipActionCreateSerializer(SoftDeleteSerializer):
     class Meta(BaseSerializer.Meta):
         model = CarDealershipAction

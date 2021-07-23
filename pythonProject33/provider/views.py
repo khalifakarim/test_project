@@ -1,6 +1,6 @@
 from rest_framework import viewsets
 
-from core.views.mixins.base import SoftDeleteMixin, SerializerChooseMixin
+from core.views.mixins.base import SoftDeleteMixin, SerializerChooseMixin, SerializerChooseMixin2
 
 from provider.serializers import (
     ProviderActionCreateSerializer,
@@ -32,12 +32,19 @@ class ManufacturerViewSet(
 
 class CarViewSet(
     SoftDeleteMixin,
-    SerializerChooseMixin,
+    SerializerChooseMixin2,
     viewsets.ModelViewSet
 ):
     queryset = Car.objects.all()
-    read_only_serializer = CarReadSerializer
-    write_serializer = CarCreateSerializer
+    default_serializer_class = CarReadSerializer
+    allow_serializer_class = {
+        "retrieve": CarReadSerializer,
+        "update": CarCreateSerializer,
+        "create": CarCreateSerializer,
+        "list": CarReadSerializer,
+    }
+    # read_only_serializer = CarReadSerializer
+    # write_serializer = CarCreateSerializer
 
 
 class ProviderViewSet(

@@ -1,10 +1,11 @@
 from rest_framework import serializers
 
-from client.models import User, Offer
+from core.serializers.base import SoftDeleteSerializer
 from provider.serializers import CarReadSerializer
+from client.models import User, Offer
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(SoftDeleteSerializer):
     class Meta:
         model = User
         fields = (
@@ -36,7 +37,7 @@ class OfferReadSerializer(serializers.ModelSerializer):
         )
 
 
-class OfferCreateSerializer(serializers.ModelSerializer):
+class OfferCreateSerializer(SoftDeleteSerializer):
     class Meta:
         model = Offer
         fields = (
