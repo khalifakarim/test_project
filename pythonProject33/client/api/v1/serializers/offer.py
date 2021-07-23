@@ -1,27 +1,9 @@
 from rest_framework import serializers
 
+from client.api.v1.serializers.customer import UserSerializer
 from core.serializers.base import SoftDeleteSerializer
 from provider.serializers import CarReadSerializer
-from client.models import User, Offer
-
-
-class UserSerializer(SoftDeleteSerializer):
-    class Meta:
-        model = User
-        fields = (
-            'id',
-            'email',
-            'username',
-            'is_active',
-            'password',
-            'gender',
-            'age',
-        )
-        read_only = ('id',)
-        extra_kwargs = {'password': {'write_only': True}}
-
-    def create(self, validated_data):
-        return User.objects.create_user(**validated_data)
+from client.models import Offer
 
 
 class OfferReadSerializer(serializers.ModelSerializer):
