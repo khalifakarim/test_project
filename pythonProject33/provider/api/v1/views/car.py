@@ -2,6 +2,7 @@ from rest_framework import viewsets
 
 from provider.api.v1.serializers.car import CarReadSerializer, CarCreateSerializer
 from core.views.mixins.base import SoftDeleteMixin, SerializerChooseMixin2
+from provider.api.v1.filters.car import CarFilter
 from provider.models import Car
 
 
@@ -18,3 +19,12 @@ class CarViewSet(
         "create": CarCreateSerializer,
         "list": CarReadSerializer,
     }
+    filterset_class = CarFilter
+    search_fields = (
+        'manufacturer__name',
+        'model',
+    )
+    ordering_fields = (
+        'manufacturer__name',
+        'model',
+    )

@@ -18,3 +18,19 @@ class CarDealershipActionViewSet(
     queryset = CarDealershipAction.objects.all()
     read_only_serializer = CarDealershipActionReadSerializer
     write_serializer = CarDealershipActionCreateSerializer
+    search_fields = (
+        'title',
+        'car_dealership__name',
+        'action_start_time',
+        'action_end_time',
+        'car__model',
+        'car__carcase',
+        'car__manufacturer__name',
+    )
+    ordering_fields = (
+        'car_dealership__name',
+        'action_start_time',
+        'action_end_time',
+        'car__model',
+        'car__manufacturer__name',
+    )

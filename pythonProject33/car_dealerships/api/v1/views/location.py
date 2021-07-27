@@ -9,3 +9,13 @@ class LocationViewSet(
 ):
     serializer_class = LocationSerializer
     queryset = Location.objects.all()
+    search_fields = (
+        'country',
+        'city',
+        'street',
+        'building_number',
+    )
+    ordering_fields = (
+        'street',
+        'building_number',
+    )

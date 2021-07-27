@@ -1,8 +1,8 @@
 from rest_framework import serializers
 
 from client.api.v1.serializers.customer import UserSerializer
+from provider.api.v1.serializers.car import CarReadSerializer
 from core.serializers.base import SoftDeleteSerializer
-from provider.serializers import CarReadSerializer
 from client.models import Offer
 
 

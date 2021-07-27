@@ -1,18 +1,20 @@
 from rest_framework.routers import DefaultRouter
+from django.urls import path
 
-from car_dealerships.api.v1.views.car_dealership_action import CarDealershipActionViewSet
-from car_dealerships.api.v1.views.car_dealership_sale import CarDealershipSaleViewSet
-from car_dealerships.api.v1.views.car_dealership_buy import CarDealershipBuyViewSet
-from car_dealerships.api.v1.views.available_cars import AvailableCarsViewSet
-from car_dealerships.api.v1.views.car_dealership import CarDealershipViewSet
-from car_dealerships.api.v1.views.location import LocationViewSet
+from client.api.v1.views.customer import UserViewSet, UserUpdateViewSet
+from client.api.v1.views.offer import OfferViewSet
+
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 router = DefaultRouter()
-router.register("sale-history", CarDealershipSaleViewSet)
-router.register("available-cars", AvailableCarsViewSet)
-router.register("buy-history", CarDealershipBuyViewSet)
-router.register("actions", CarDealershipActionViewSet)
-router.register("location", LocationViewSet)
-router.register("", CarDealershipViewSet)
+router.register("users", UserViewSet)
+router.register("update", UserUpdateViewSet)
+router.register("offer", OfferViewSet)
 
-urlpatterns = router.urls
+urlpatterns = [
+                  path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+                  path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+              ] + router.urls
