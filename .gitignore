@@ -15,6 +15,7 @@ __pycache__/
 migrations**/
 migrations
 migrations/*
+pg_data
 
 .Python
 build/

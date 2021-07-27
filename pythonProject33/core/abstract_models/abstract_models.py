@@ -45,3 +45,6 @@ class CarDealershipDeal(models.Model):
         related_name="+",
         null=True,
     )
+
+    class Meta:
+        abstract = True

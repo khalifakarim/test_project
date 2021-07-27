@@ -10,7 +10,7 @@ class Carcase(BaseEnum):
 
 
 class State(BaseEnum):
-    NEW = "NEW"
+    NEW = "new"
     WITH_MILEAGE = "with mileage"
     BROKEN = "broken"
     TOTAL = "total"
