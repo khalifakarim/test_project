@@ -1,8 +1,8 @@
 from rest_framework import viewsets
 
-from provider.api.v1.serializers.provider_action import ProviderActionReadSerializer, ProviderActionCreateSerializer
-from provider.api.v1.filters.provider_action import ProviderActionFilter
+from provider.api.v1.serializers import ProviderActionReadSerializer, ProviderActionCreateSerializer
 from core.views.mixins.base import SoftDeleteMixin, SerializerChooseMixin
+from provider.api.v1.filters import ProviderActionFilter
 from provider.models import ProviderAction
 
 

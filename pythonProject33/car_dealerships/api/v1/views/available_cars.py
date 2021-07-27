@@ -1,9 +1,9 @@
 from rest_framework import viewsets
 
-from car_dealerships.api.v1.serializers.available_cars import AvailableCarsSerializer
-from car_dealerships.api.v1.filters.available_cars import AvailableCarsFilter
-from car_dealerships.models import AvailableCars
+from car_dealerships.api.v1.serializers import AvailableCarsSerializer
+from car_dealerships.api.v1.filters import AvailableCarsFilter
 from core.views.mixins.base import SoftDeleteMixin
+from car_dealerships.models import AvailableCars
 
 
 class AvailableCarsViewSet(

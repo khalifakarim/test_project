@@ -1,11 +1,13 @@
 from rest_framework.routers import DefaultRouter
 
-from car_dealerships.api.v1.views.car_dealership_action import CarDealershipActionViewSet
-from car_dealerships.api.v1.views.car_dealership_sale import CarDealershipSaleViewSet
-from car_dealerships.api.v1.views.car_dealership_buy import CarDealershipBuyViewSet
-from car_dealerships.api.v1.views.available_cars import AvailableCarsViewSet
-from car_dealerships.api.v1.views.car_dealership import CarDealershipViewSet
-from car_dealerships.api.v1.views.location import LocationViewSet
+from car_dealerships.api.v1.views import (
+    CarDealershipActionViewSet,
+    CarDealershipSaleViewSet,
+    CarDealershipBuyViewSet,
+    AvailableCarsViewSet,
+    CarDealershipViewSet,
+    LocationViewSet,
+)
 
 router = DefaultRouter()
 router.register("sale-history", CarDealershipSaleViewSet)

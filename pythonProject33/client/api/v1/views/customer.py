@@ -1,8 +1,8 @@
 from rest_framework import viewsets, mixins
 
-from client.api.v1.serializers.customer import UserSerializer
+from client.api.v1.serializers import UserSerializer
 from core.views.mixins.base import SoftDeleteMixin
-from client.api.v1.filters.user import UserFilter
+from client.api.v1.filters import UserFilter
 from core.permissions.customer import IsUser
 from client.models import User
 

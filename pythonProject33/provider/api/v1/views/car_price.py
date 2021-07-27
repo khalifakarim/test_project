@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 
-from provider.api.v1.serializers.car_price import CarPriceSerializer
-from provider.api.v1.filters.car_price import CarPriceFilter
+from provider.api.v1.serializers import CarPriceSerializer
+from provider.api.v1.filters import CarPriceFilter
 from core.views.mixins.base import SoftDeleteMixin
 from provider.models import CarPrice
 

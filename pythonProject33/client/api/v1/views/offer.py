@@ -1,8 +1,8 @@
 from rest_framework import viewsets
 
-from client.api.v1.serializers.offer import OfferCreateSerializer, OfferReadSerializer
+from client.api.v1.serializers import OfferCreateSerializer, OfferReadSerializer
 from core.views.mixins.base import SoftDeleteMixin, SerializerChooseMixin
-from client.api.v1.filters.offer import OfferFilter
+from client.api.v1.filters import OfferFilter
 from client.models import Offer
 
 

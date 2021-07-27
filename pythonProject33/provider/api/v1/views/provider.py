@@ -1,6 +1,6 @@
 from rest_framework import viewsets
 
-from provider.api.v1.serializers.provider import ProviderReadSerializer, ProviderCreateSerializer
+from provider.api.v1.serializers import ProviderReadSerializer, ProviderCreateSerializer
 from core.views.mixins.base import SoftDeleteMixin, SerializerChooseMixin
 from provider.models import Provider
 
@@ -13,6 +13,7 @@ class ProviderViewSet(
     queryset = Provider.objects.all()
     read_only_serializer = ProviderReadSerializer
     write_serializer = ProviderCreateSerializer
+    filterset_fields = ('is_active',)
     search_fields = (
         'name',
         'foundation_time',

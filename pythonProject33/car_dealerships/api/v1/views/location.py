@@ -1,6 +1,6 @@
 from rest_framework import viewsets
 
-from car_dealerships.api.v1.serializers.location import LocationSerializer
+from car_dealerships.api.v1.serializers import LocationSerializer
 from car_dealerships.models import Location
 
 

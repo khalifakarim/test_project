@@ -1,8 +1,8 @@
 from rest_framework import viewsets
 
-from provider.api.v1.serializers.car import CarReadSerializer, CarCreateSerializer
+from provider.api.v1.serializers import CarReadSerializer, CarCreateSerializer
 from core.views.mixins.base import SoftDeleteMixin, SerializerChooseMixin2
-from provider.api.v1.filters.car import CarFilter
+from provider.api.v1.filters import CarFilter
 from provider.models import Car
 
 
