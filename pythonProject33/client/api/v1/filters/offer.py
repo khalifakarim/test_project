@@ -7,7 +7,8 @@ from django_filters import (
 
 
 class OfferFilter(FilterSet):
-    min_price = NumberFilter(field_name="max_price", lookup_expr='lte')
+    maximum_price = NumberFilter(field_name="max_price", lookup_expr='lte')
+    minimum_price = NumberFilter(field_name="max_price", lookup_expr='gte')
 
     class Meta:
         model = Offer

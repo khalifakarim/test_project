@@ -9,6 +9,7 @@ from car_dealerships.api.v1.views import (
     LocationViewSet,
 )
 
+
 router = DefaultRouter()
 router.register("sale-history", CarDealershipSaleViewSet)
 router.register("available-cars", AvailableCarsViewSet)

@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 
 from car_dealerships.api.v1.serializers import CarDealershipBuySerializer
-from car_dealerships.api.v1.filters.car_dealeship_buy import CarDealershipBuyFilter
+from car_dealerships.api.v1.filters import CarDealershipBuyFilter
 from car_dealerships.models import CarDealershipBuy
 from core.views.mixins.base import SoftDeleteMixin
 

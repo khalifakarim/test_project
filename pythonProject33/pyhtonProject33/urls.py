@@ -17,7 +17,7 @@ if settings.DEBUG:
         path('__debug__/', include(debug_toolbar.urls)),
     ))
 
-if settings.SWAGGER:
+if settings.USE_SWAGGER:
     from pyhtonProject33.yasg import urlpatterns as swagger_urls
 
     urlpatterns.extend(swagger_urls)

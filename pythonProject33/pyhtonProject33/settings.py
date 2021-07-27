@@ -161,7 +161,7 @@ USE_L10N = False
 
 USE_TZ = True
 
-SWAGGER = os.environ.get("SWAGGER", True)
+USE_SWAGGER = os.environ.get("USE_SWAGGER", True)
 
 en_formats.DATETIME_FORMAT = "%d/%m/%Y"
 en_formats.DATE_INPUT_FORMATS = ['%d/%m/%Y', '%d-%m-%Y']

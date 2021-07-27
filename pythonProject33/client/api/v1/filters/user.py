@@ -7,8 +7,8 @@ from django_filters import (
 
 
 class UserFilter(FilterSet):
-    min_balance = NumberFilter(field_name="balance", lookup_expr='lte')
-    max_balance = NumberFilter(field_name="balance", lookup_expr='gte')
+    max_balance = NumberFilter(field_name="balance", lookup_expr='lte')
+    min_balance = NumberFilter(field_name="balance", lookup_expr='gte')
 
     class Meta:
         model = User

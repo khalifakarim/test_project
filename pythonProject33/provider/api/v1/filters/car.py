@@ -7,12 +7,12 @@ from django_filters import (
 
 
 class CarFilter(FilterSet):
-    min_price = NumberFilter(field_name="production_year", lookup_expr='lte')
-    max_price = NumberFilter(field_name="production_year", lookup_expr='gte')
-    max_production_year = NumberFilter(field_name="production_year", lookup_expr='gte')
-    min_production_year = NumberFilter(field_name="production_year", lookup_expr='lte')
-    min_horse_power = NumberFilter(field_name="production_year", lookup_expr='lte')
-    max_horse_power = NumberFilter(field_name="production_year", lookup_expr='gte')
+    max_price = NumberFilter(field_name="production_year", lookup_expr='lte')
+    min_price = NumberFilter(field_name="production_year", lookup_expr='gte')
+    min_production_year = NumberFilter(field_name="production_year", lookup_expr='gte')
+    max_production_year = NumberFilter(field_name="production_year", lookup_expr='lte')
+    max_horse_power = NumberFilter(field_name="production_year", lookup_expr='lte')
+    min_horse_power = NumberFilter(field_name="production_year", lookup_expr='gte')
 
     class Meta:
         model = Car

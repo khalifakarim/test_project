@@ -8,6 +8,7 @@ from provider.api.v1.views import (
     CarViewSet,
 )
 
+
 router = DefaultRouter()
 router.register("manufacturer", ManufacturerViewSet)
 router.register("action", ProviderActionViewSet)

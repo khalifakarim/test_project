@@ -7,8 +7,8 @@ from django_filters import (
 
 
 class CarPriceFilter(FilterSet):
-    min_price = NumberFilter(field_name="production_year", lookup_expr='lte')
-    max_price = NumberFilter(field_name="production_year", lookup_expr='gte')
+    max_price = NumberFilter(field_name="production_year", lookup_expr='lte')
+    min_price = NumberFilter(field_name="production_year", lookup_expr='gte')
 
     class Meta:
         model = CarPrice

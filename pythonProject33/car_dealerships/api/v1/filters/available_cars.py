@@ -7,10 +7,10 @@ from django_filters import (
 
 
 class AvailableCarsFilter(FilterSet):
-    max_cars_quantity = NumberFilter(field_name="cars_quantity", lookup_expr='gte')
-    min_cars_quantity_lte = NumberFilter(field_name="cars_quantity", lookup_expr='lte')
-    min_price = NumberFilter(field_name="price", lookup_expr='lte')
-    max_price = NumberFilter(field_name="price", lookup_expr='gte')
+    min_cars_quantity = NumberFilter(field_name="cars_quantity", lookup_expr='gte')
+    max_cars_quantity_lte = NumberFilter(field_name="cars_quantity", lookup_expr='lte')
+    max_price = NumberFilter(field_name="price", lookup_expr='lte')
+    min_price = NumberFilter(field_name="price", lookup_expr='gte')
 
     class Meta:
         model = AvailableCars

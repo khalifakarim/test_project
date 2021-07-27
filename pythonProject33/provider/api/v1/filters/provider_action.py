@@ -7,8 +7,8 @@ from django_filters import (
 
 
 class ProviderActionFilter(FilterSet):
-    max_discount_percentage = NumberFilter(field_name="discount_percentage", lookup_expr='gte')
-    min_discount_percentage = NumberFilter(field_name="discount_percentage", lookup_expr='lte')
+    min_discount_percentage = NumberFilter(field_name="discount_percentage", lookup_expr='gte')
+    max_discount_percentage = NumberFilter(field_name="discount_percentage", lookup_expr='lte')
 
     class Meta:
         model = ProviderAction

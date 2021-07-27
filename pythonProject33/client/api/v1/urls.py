@@ -12,6 +12,7 @@ from client.api.v1.views import (
     UserViewSet,
 )
 
+
 router = DefaultRouter()
 router.register("users", UserViewSet)
 router.register("update", UserUpdateViewSet)
