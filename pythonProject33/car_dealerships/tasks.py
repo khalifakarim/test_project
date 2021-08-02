@@ -1,5 +1,5 @@
 from celery import shared_task
-from django.db.models import Count
+from django.db.models import Count, F
 
 from car_dealerships.models import CarDealershipSale, CarDealership, CarDealershipBuy
 from provider.models import CarPrice
@@ -16,6 +16,8 @@ def _check_balance(showroom, providers):
         if showroom.balance > provider.price:
             lost_showroom_money(showroom, provider.price)
             create_buy_history(showroom, provider)
+        else:
+            return
 
 
 def _get_active_showrooms():
@@ -29,8 +31,8 @@ def _get_sale_history(showroom):
 
 
 def _get_better_provider(cars, showroom):
-    if len(cars) == 0:
-        return None
+    if not cars:
+        return
     for car in cars:
         providers = CarPrice.objects.filter(
             car=car.pk, ).order_by('price')
@@ -38,7 +40,7 @@ def _get_better_provider(cars, showroom):
 
 
 def lost_showroom_money(showroom, price):
-    showroom.balance -= price
+    showroom.balance = F('balance') + price
     showroom.save()
 
 

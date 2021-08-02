@@ -1,3 +1,5 @@
+from django.db.models import F
+
 from car_dealerships.models import CarDealershipSale
 from car_dealerships.models import AvailableCars
 from client.models import Offer
@@ -19,13 +21,13 @@ def _get_car(offer):
 
 
 def _showroom_additions_balance(car):
-    car.car_dealership.balance += car.price
-    car.cars_quantity -= 1
+    car.car_dealership.balance += F('car.price')
+    car.cars_quantity -= F('cars_quantity') + 1
     car.save()
 
 
 def _user_deduction_balance(user, car_price):
-    user.balance -= car_price
+    user.balance -= F('car_price')
     user.save()
 
 
