@@ -35,12 +35,16 @@ THIRD_PARTY_APPS = [
     "django_countries",
     'debug_toolbar',
     'django_filters',
+    'django_celery_beat',
+    'django_celery_results',
+
 ]
 
 LOCAL_APPS = [
     "car_dealerships",
     "client",
     "provider",
+
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -180,4 +184,10 @@ DEBUG_TOOLBAR_CONFIG = {
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
 AUTH_USER_MODEL = "client.User"
+
+CELERY_TIMEZONE = "Europe/Moscow"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_BROKER_URL = 'redis://redis:6379'

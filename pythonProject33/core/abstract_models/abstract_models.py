@@ -37,7 +37,6 @@ class BaseCarRelation(models.Model):
 
 
 class CarDealershipDeal(models.Model):
-    cars_quantity = models.PositiveSmallIntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     car = models.ForeignKey(
         "provider.Car",

@@ -4,6 +4,7 @@ from django.db import models
 from core.abstract_models.abstract_models import BaseCarRelation, CarDealershipDeal
 from core.abstract_models.abstract_models import Action
 from provider.models import Car
+from car_dealerships.api.v1.services.create_available_cars import create_available_cars
 
 from core.abstract_models.base_abstract_models import (
     SoftDelete,
@@ -25,6 +26,12 @@ class Location(models.Model):
         return f"{self.country} {self.city} {self.street} {self.building_number}"
 
 
+class CarDealershipManager(models.Manager):
+
+    def get_active_showrooms(self):
+        return super().get_queryset().filter(is_active=True)
+
+
 class CarDealership(SoftDelete, CreatedAt, UpdateAt):
     name = models.CharField(max_length=150, unique=True)
     balance = models.DecimalField(max_digits=10, decimal_places=2)
@@ -37,8 +44,14 @@ class CarDealership(SoftDelete, CreatedAt, UpdateAt):
         related_name="car_dealerships",
     )
 
+    objects = CarDealershipManager()
+
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        create_available_cars(self)
+        return super(CarDealership, self).save(*args, **kwargs)
 
 
 class AvailableCars(SoftDelete, CreatedAt, UpdateAt, BaseCarRelation):
@@ -69,6 +82,7 @@ class CarDealershipSale(SoftDelete, CreatedAt, UpdateAt, CarDealershipDeal):
 
 
 class CarDealershipBuy(SoftDelete, CreatedAt, UpdateAt, CarDealershipDeal):
+    cars_quantity = models.PositiveSmallIntegerField()
     car_dealership = models.ForeignKey(
         CarDealership, on_delete=models.CASCADE, related_name="purchases"
     )

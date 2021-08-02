@@ -16,3 +16,10 @@ class CarDealershipReadSerializer(serializers.ModelSerializer):
 class CarDealershipCreateSerializer(SoftDeleteSerializer):
     class Meta(BaseSerializer.Meta):
         model = CarDealership
+
+    def validate_preferred_characteristics(self, preferred_characteristics):
+        validate_preferred_characteristics = dict()
+        for key in preferred_characteristics:
+            validate_preferred_characteristics['car__' + key] = preferred_characteristics[key]
+
+        return validate_preferred_characteristics

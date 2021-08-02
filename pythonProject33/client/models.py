@@ -62,6 +62,14 @@ class User(AbstractBaseUser, PermissionsMixin, SoftDelete, CreatedAt, UpdateAt):
         return self.email
 
 
+class OfferManager(models.Manager):
+    def get_active_offers(self):
+        return super().get_queryset().filter(is_active=True)
+
+    def check_user_offer(self, user_id):
+        return super().get_queryset().filter(is_active=True, user__id=user_id)
+
+
 class Offer(SoftDelete, CreatedAt, UpdateAt):
     user = models.ForeignKey(
         User,
@@ -80,3 +88,5 @@ class Offer(SoftDelete, CreatedAt, UpdateAt):
 
     def __str__(self):
         return f"{self.car} , {self.max_price}"
+
+    objects = OfferManager()
