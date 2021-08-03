@@ -1,10 +1,10 @@
 from django_countries.fields import CountryField
 from django.db import models
 
+from car_dealerships.api.v1.services.create_available_cars import create_available_cars
 from core.abstract_models.abstract_models import BaseCarRelation, CarDealershipDeal
 from core.abstract_models.abstract_models import Action
 from provider.models import Car
-from car_dealerships.api.v1.services.create_available_cars import create_available_cars
 
 from core.abstract_models.base_abstract_models import (
     SoftDelete,
@@ -50,8 +50,8 @@ class CarDealership(SoftDelete, CreatedAt, UpdateAt):
         return self.name
 
     def save(self, *args, **kwargs):
+        super(CarDealership, self).save(*args, **kwargs)
         create_available_cars(self)
-        return super(CarDealership, self).save(*args, **kwargs)
 
 
 class AvailableCars(SoftDelete, CreatedAt, UpdateAt, BaseCarRelation):

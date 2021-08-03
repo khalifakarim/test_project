@@ -14,6 +14,7 @@ def _get_car(offer):
         car__id=offer.car.id,
         price__lte=offer.max_price,
         cars_quantity__gt=0).order_by('price').first()
+
     _showroom_additions_balance(car)
     _user_deduction_balance(offer.user, car.price)
     _create_sale_history(car, offer.user)
@@ -21,14 +22,12 @@ def _get_car(offer):
 
 
 def _showroom_additions_balance(car):
-    car.car_dealership.balance += F('car.price')
-    car.cars_quantity -= F('cars_quantity') + 1
-    car.save()
+    car.car_dealership.update(balance=F('balance') + car.price)
+    car.update(cars_quantity=F('cars_quantity') - 1)
 
 
 def _user_deduction_balance(user, car_price):
-    user.balance -= F('car_price')
-    user.save()
+    user.update(balance=F('balance') - car_price)
 
 
 def _create_sale_history(car, user):
@@ -41,5 +40,4 @@ def _create_sale_history(car, user):
 
 
 def _deactivate_offer(offer):
-    offer.is_active = False
-    offer.save()
+    offer.update(is_active=False)
