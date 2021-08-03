@@ -43,6 +43,11 @@ class CarDealership(SoftDelete, CreatedAt, UpdateAt):
         "client.User",
         related_name="car_dealerships",
     )
+    providers = models.ManyToManyField(
+        'provider.Provider',
+        through='PurchaseCharacteristics',
+        through_fields=('provider', 'car_dealership'),
+    )
 
     objects = CarDealershipManager()
 
@@ -52,6 +57,13 @@ class CarDealership(SoftDelete, CreatedAt, UpdateAt):
     def save(self, *args, **kwargs):
         super(CarDealership, self).save(*args, **kwargs)
         create_available_cars(self)
+
+
+class PurchaseCharacteristics(SoftDelete, CreatedAt, UpdateAt):
+    provider = models.ForeignKey('provider.Provider', on_delete=models.CASCADE, related_name='+')
+    car_dealership = models.ForeignKey(CarDealership, on_delete=models.CASCADE, related_name='+')
+    car = models.ForeignKey('provider.Car', on_delete=models.CASCADE)
+    preferred_cars_quantity = models.SmallIntegerField()
 
 
 class AvailableCars(SoftDelete, CreatedAt, UpdateAt, BaseCarRelation):

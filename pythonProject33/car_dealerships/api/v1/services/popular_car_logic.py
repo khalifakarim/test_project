@@ -25,20 +25,22 @@ def _get_active_showrooms():
 
 
 def _get_sale_history(showroom):
-    cars = CarDealershipSale.objects.values("car").annotate(car_count=Count("car")).order_by("-car_count")
+    cars = CarDealershipSale.objects.filter(car_dealership=showroom).values("car").annotate(
+        car_count=Count("car")).order_by("-car_count")
     _get_better_provider(cars, showroom)
 
 
 def _get_better_provider(cars, showroom):
+    providers = []
     if not cars:
         raise SaleHistoryError(showroom.name)
     for car in cars:
-        providers = CarPrice.objects.filter(car__id=car['car'], ).order_by('price')
+        providers.append(CarPrice.objects.filter(car__id=car['car'], ).order_by('price'))
     return _check_balance(showroom, providers)
 
 
 def lost_showroom_money(showroom, price):
-    CarDealership.objects.filter(id=showroom.id).update(balance=F('balance') + price)
+    CarDealership.objects.filter(id=showroom.id).update(balance=F('balance') - price)
 
 
 def create_buy_history(showroom, provider):
