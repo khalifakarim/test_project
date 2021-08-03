@@ -22,5 +22,5 @@ class CarDealershipCreateSerializer(SoftDeleteSerializer):
         car_characteristics = tuple(field.column for field in Car._meta.get_fields())
 
         if not set(preferred_characteristics.keys()).issubset(set(car_characteristics)):
-            raise serializers.ValidationError
+            raise serializers.ValidationError("incorrect data")
         return preferred_characteristics

@@ -1,4 +1,4 @@
-from django.db.models import Count, F
+from django.db.models import Count, F, Max
 
 from car_dealerships.api.v1.exceptions.sale_history import SaleHistoryError
 from car_dealerships.api.v1.exceptions.balance import BalanceError
@@ -25,8 +25,7 @@ def _get_active_showrooms():
 
 
 def _get_sale_history(showroom):
-    cars = CarDealershipSale.objects.filter(car_dealership=showroom).aggregate(Count('car__id')).order_by(
-        Count('-car__id'))
+    cars = CarDealershipSale.objects.values("car").annotate(car_count=Count("car")).order_by("-car_count")
     _get_better_provider(cars, showroom)
 
 
@@ -34,20 +33,19 @@ def _get_better_provider(cars, showroom):
     if not cars:
         raise SaleHistoryError(showroom.name)
     for car in cars:
-        providers = CarPrice.objects.filter(car=car.pk, ).order_by('price')
+        providers = CarPrice.objects.filter(car__id=car['car'], ).order_by('price')
     return _check_balance(showroom, providers)
 
 
 def lost_showroom_money(showroom, price):
-    showroom.update(balance=F('balance') + price)
+    CarDealership.objects.filter(id=showroom.id).update(balance=F('balance') + price)
 
 
 def create_buy_history(showroom, provider):
     CarDealershipBuy.objects.create(
-        showroom=showroom,
-        provider=provider,
+        car_dealership=showroom,
+        provider=provider.provider,
         price=provider.price,
         car=provider.car,
         cars_quantity=1,
     )
-

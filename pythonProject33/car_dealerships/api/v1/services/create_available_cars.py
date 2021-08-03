@@ -8,6 +8,7 @@ def create_available_cars(showroom):
 
 def create_carshowroom_cars(cars, showroom):
     from car_dealerships.models import AvailableCars
+
     available_cars = []
 
     for car in cars:
