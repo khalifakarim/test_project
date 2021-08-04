@@ -2,6 +2,7 @@ from django.db.models import Count, F, Max
 
 from car_dealerships.api.v1.exceptions.sale_history import SaleHistoryError
 from car_dealerships.api.v1.exceptions.balance import BalanceError
+from car_dealerships.models import PurchaseCharacteristics
 from provider.models import CarPrice
 
 from car_dealerships.models import (
@@ -11,11 +12,12 @@ from car_dealerships.models import (
 )
 
 
-def _check_balance(showroom, providers):
-    for provider in providers:
-        if showroom.balance > provider.price:
-            lost_showroom_money(showroom, provider.price)
-            create_buy_history(showroom, provider)
+def _check_balance(showroom, purchase_characteristics):
+    for purchase_characteristic in purchase_characteristics:
+        price = purchase_characteristic.provider.cars.filter(car__id=purchase_characteristic.car.id).first().price
+        if showroom.balance > price:
+            lost_showroom_money(showroom, price)
+            create_buy_history(showroom, purchase_characteristic, price)
         else:
             raise BalanceError(showroom.name)
 
@@ -31,23 +33,23 @@ def _get_sale_history(showroom):
 
 
 def _get_better_provider(cars, showroom):
-    providers = []
+    purchase_characteristics = []
     if not cars:
         raise SaleHistoryError(showroom.name)
     for car in cars:
-        providers.append(CarPrice.objects.filter(car__id=car['car'], ).order_by('price'))
-    return _check_balance(showroom, providers)
+        purchase_characteristics.append(PurchaseCharacteristics.objects.filter(car__id=car['car']).first())
+    return _check_balance(showroom, purchase_characteristics)
 
 
 def lost_showroom_money(showroom, price):
     CarDealership.objects.filter(id=showroom.id).update(balance=F('balance') - price)
 
 
-def create_buy_history(showroom, provider):
+def create_buy_history(showroom, purchase_characteristic, price):
     CarDealershipBuy.objects.create(
         car_dealership=showroom,
-        provider=provider.provider,
-        price=provider.price,
-        car=provider.car,
+        provider=purchase_characteristic.provider,
+        price=price,
+        car=purchase_characteristic.car,
         cars_quantity=1,
     )

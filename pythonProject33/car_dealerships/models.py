@@ -1,6 +1,7 @@
 from django_countries.fields import CountryField
 from django.db import models
 
+from car_dealerships.api.v1.services.create_purchase_characteristics import create_purchase_characteristics
 from car_dealerships.api.v1.services.create_available_cars import create_available_cars
 from core.abstract_models.abstract_models import BaseCarRelation, CarDealershipDeal
 from core.abstract_models.abstract_models import Action
@@ -11,6 +12,12 @@ from core.abstract_models.base_abstract_models import (
     CreatedAt,
     UpdateAt,
 )
+
+
+class SoftDeleteManager(models.Manager):
+
+    def get_active_instance(self):
+        return super().get_queryset().filter(is_active=True)
 
 
 class Location(models.Model):
@@ -26,10 +33,10 @@ class Location(models.Model):
         return f"{self.country} {self.city} {self.street} {self.building_number}"
 
 
-class CarDealershipManager(models.Manager):
+class CarDealershipManager(SoftDeleteManager):
 
     def get_active_showrooms(self):
-        return super().get_queryset().filter(is_active=True)
+        return super().get_active_instance()
 
 
 class CarDealership(SoftDelete, CreatedAt, UpdateAt):
@@ -43,11 +50,6 @@ class CarDealership(SoftDelete, CreatedAt, UpdateAt):
         "client.User",
         related_name="car_dealerships",
     )
-    providers = models.ManyToManyField(
-        'provider.Provider',
-        through='PurchaseCharacteristics',
-        through_fields=('provider', 'car_dealership'),
-    )
 
     objects = CarDealershipManager()
 
@@ -57,13 +59,14 @@ class CarDealership(SoftDelete, CreatedAt, UpdateAt):
     def save(self, *args, **kwargs):
         super(CarDealership, self).save(*args, **kwargs)
         create_available_cars(self)
+        create_purchase_characteristics(self)
 
 
 class PurchaseCharacteristics(SoftDelete, CreatedAt, UpdateAt):
-    provider = models.ForeignKey('provider.Provider', on_delete=models.CASCADE, related_name='+')
-    car_dealership = models.ForeignKey(CarDealership, on_delete=models.CASCADE, related_name='+')
+    provider = models.ForeignKey('provider.Provider', on_delete=models.CASCADE, related_name='showrooms_cars')
+    car_dealership = models.ForeignKey(CarDealership, on_delete=models.CASCADE, related_name='my_cars')
     car = models.ForeignKey('provider.Car', on_delete=models.CASCADE)
-    preferred_cars_quantity = models.SmallIntegerField()
+    preferred_cars_quantity = models.SmallIntegerField(default=1)
 
 
 class AvailableCars(SoftDelete, CreatedAt, UpdateAt, BaseCarRelation):

@@ -19,8 +19,8 @@ class CarDealershipCreateSerializer(SoftDeleteSerializer):
         model = CarDealership
 
     def validate_preferred_characteristics(self, preferred_characteristics):
-        car_characteristics = tuple(field.column for field in Car._meta.get_fields())
+        car_characteristics = tuple(field.column for field in Car._meta.get_fields() if hasattr(field, "column"))
 
-        if not set(preferred_characteristics.keys()).issubset(set(car_characteristics)):
-            raise serializers.ValidationError("incorrect data")
+        if not set(preferred_characteristics.keys()).issubset(car_characteristics):
+            raise serializers.ValidationError({'preferred_characteristics': 'incorrect data'})
         return preferred_characteristics

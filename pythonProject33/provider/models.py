@@ -66,6 +66,7 @@ class CarPrice(SoftDelete, CreatedAt, UpdateAt, BaseCarRelation):
     provider = models.ForeignKey(
         Provider,
         related_name="cars",
+        related_query_name='car',
         on_delete=models.CASCADE,
     )
 

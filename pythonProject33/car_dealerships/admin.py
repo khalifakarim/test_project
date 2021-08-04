@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 from car_dealerships.models import (
+    PurchaseCharacteristics,
     CarDealershipAction,
     CarDealershipSale,
     CarDealershipBuy,
@@ -127,6 +128,26 @@ class AvailableCarsAdmin(admin.ModelAdmin):
     search_fields = (
         "car_dealership__name"
         "car__manufacturer__name",
+        "car__model",
+        "car__state",
+        "car__carcase",
+    )
+
+
+@admin.register(PurchaseCharacteristics)
+class PurchaseCharacteristicsAdmin(admin.ModelAdmin):
+    list_display = (
+        "provider",
+        "car_dealership",
+        "car",
+        "preferred_cars_quantity",
+    )
+    list_filter = (
+        "is_active",
+    )
+    search_fields = (
+        "car_dealership__name"
+        "provider__name",
         "car__model",
         "car__state",
         "car__carcase",
