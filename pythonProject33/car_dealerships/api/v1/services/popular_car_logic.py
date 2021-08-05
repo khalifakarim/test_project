@@ -1,5 +1,6 @@
-from django.db.models import Count, F
 import logging
+
+from django.db.models import Count, F
 
 from car_dealerships.api.v1.exceptions.sale_history import SaleHistoryError
 from car_dealerships.api.v1.exceptions.balance import BalanceError

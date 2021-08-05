@@ -15,9 +15,6 @@ from core.abstract_models.base_abstract_models import (
 )
 
 
-
-
-
 class Location(models.Model):
     country = CountryField()
     city = models.CharField(max_length=150)
@@ -29,10 +26,6 @@ class Location(models.Model):
 
     def __str__(self):
         return f"{self.country} {self.city} {self.street} {self.building_number}"
-
-
-class CarDealershipManager(SoftDeleteManager):
-    pass
 
 
 class CarDealership(SoftDelete, CreatedAt, UpdateAt):
@@ -47,7 +40,7 @@ class CarDealership(SoftDelete, CreatedAt, UpdateAt):
         related_name="car_dealerships",
     )
 
-    objects = CarDealershipManager()
+    objects = SoftDeleteManager()
 
     def __str__(self):
         return self.name

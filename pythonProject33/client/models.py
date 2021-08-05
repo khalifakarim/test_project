@@ -49,6 +49,8 @@ class User(AbstractBaseUser, PermissionsMixin, SoftDelete, CreatedAt, UpdateAt):
     birthday = models.DateTimeField(null=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
+    car_dealership = models.ManyToManyField(CarDealership, through='RegularClient',
+                                            through_fields=('client', 'car_dealership'))
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = [
@@ -93,6 +95,7 @@ class Offer(SoftDelete, CreatedAt, UpdateAt):
 
 
 class RegularClient(models.Model):
+    client = models.ForeignKey(User, on_delete=models.CASCADE)
     cars_quantity = models.SmallIntegerField()
     discount_percentage = models.IntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(100)]
