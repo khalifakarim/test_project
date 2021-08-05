@@ -1,15 +1,17 @@
-from django.db.models import Count, F, Max
+from django.db.models import Count, F
+import logging
 
 from car_dealerships.api.v1.exceptions.sale_history import SaleHistoryError
 from car_dealerships.api.v1.exceptions.balance import BalanceError
 from car_dealerships.models import PurchaseCharacteristics
-from provider.models import CarPrice
 
 from car_dealerships.models import (
     CarDealershipSale,
     CarDealershipBuy,
     CarDealership,
 )
+
+logger = logging.getLogger(__name__)
 
 
 def _check_balance(showroom, purchase_characteristics):
@@ -23,7 +25,7 @@ def _check_balance(showroom, purchase_characteristics):
 
 
 def _get_active_showrooms():
-    return CarDealership.objects.get_active_showrooms()
+    return CarDealership.objects.get_active_instances()
 
 
 def _get_sale_history(showroom):
@@ -37,8 +39,11 @@ def _get_better_provider(cars, showroom):
     if not cars:
         raise SaleHistoryError(showroom.name)
     for car in cars:
-        purchase_characteristics.append(PurchaseCharacteristics.objects.filter(car__id=car['car']).first())
-    return _check_balance(showroom, purchase_characteristics)
+        try:
+            purchase_characteristics.append(PurchaseCharacteristics.objects.filter(car__id=car['car']).first())
+            _check_balance(showroom, purchase_characteristics)
+        except BalanceError:
+            logger.warning(f"{showroom.name} does not have enough money on the balance")
 
 
 def lost_showroom_money(showroom, price):

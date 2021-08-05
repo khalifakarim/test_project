@@ -1,10 +1,11 @@
 from django_countries.fields import CountryField
 from django.db import models
 
-from car_dealerships.api.v1.services.create_purchase_characteristics import create_purchase_characteristics
-from car_dealerships.api.v1.services.create_available_cars import create_available_cars
+from car_dealerships.api.v1.services.purchase_characteristics_logic import create_purchase_characteristics
+from car_dealerships.api.v1.services.available_cars_logic import create_available_cars
 from core.abstract_models.abstract_models import BaseCarRelation, CarDealershipDeal
 from core.abstract_models.abstract_models import Action
+from core.managers.soft_delete import SoftDeleteManager
 from provider.models import Car
 
 from core.abstract_models.base_abstract_models import (
@@ -14,10 +15,7 @@ from core.abstract_models.base_abstract_models import (
 )
 
 
-class SoftDeleteManager(models.Manager):
 
-    def get_active_instance(self):
-        return super().get_queryset().filter(is_active=True)
 
 
 class Location(models.Model):
@@ -34,9 +32,7 @@ class Location(models.Model):
 
 
 class CarDealershipManager(SoftDeleteManager):
-
-    def get_active_showrooms(self):
-        return super().get_active_instance()
+    pass
 
 
 class CarDealership(SoftDelete, CreatedAt, UpdateAt):
@@ -57,7 +53,7 @@ class CarDealership(SoftDelete, CreatedAt, UpdateAt):
         return self.name
 
     def save(self, *args, **kwargs):
-        super(CarDealership, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
         create_available_cars(self)
         create_purchase_characteristics(self)
 
@@ -65,7 +61,7 @@ class CarDealership(SoftDelete, CreatedAt, UpdateAt):
 class PurchaseCharacteristics(SoftDelete, CreatedAt, UpdateAt):
     provider = models.ForeignKey('provider.Provider', on_delete=models.CASCADE, related_name='showrooms_cars')
     car_dealership = models.ForeignKey(CarDealership, on_delete=models.CASCADE, related_name='my_cars')
-    car = models.ForeignKey('provider.Car', on_delete=models.CASCADE)
+    car = models.ForeignKey('provider.Car', on_delete=models.CASCADE, related_name='+')
     preferred_cars_quantity = models.SmallIntegerField(default=1)
 
 

@@ -6,7 +6,7 @@ from client.models import Offer
 
 
 def _active_offers():
-    return Offer.objects.get_active_offers()
+    return Offer.objects.get_active_instances()
 
 
 def _get_car(offer):

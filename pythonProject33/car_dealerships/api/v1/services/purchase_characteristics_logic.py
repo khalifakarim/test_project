@@ -10,7 +10,7 @@ def create_purchase_characteristics(showroom):
 def get_providers(available_cars, showroom):
     providers = []
     for car in available_cars:
-        providers.extend(CarPrice.objects.filter(car=car.car).order_by('price'))
+        providers.append(CarPrice.objects.filter(car=car.car).order_by('price').first())
     create_table(providers, showroom)
 
 
