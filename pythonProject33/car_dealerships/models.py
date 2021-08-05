@@ -1,3 +1,4 @@
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django_countries.fields import CountryField
 from django.db import models
 

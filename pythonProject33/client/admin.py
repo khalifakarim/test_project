@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from client.models import User, Offer
+from client.models import User, Offer, RegularClient
 
 
 @admin.register(User)
@@ -26,4 +26,22 @@ class OfferAdmin(admin.ModelAdmin):
         "car_showroom__name",
         "car__manufacturer__name",
         "user__mail",
+    )
+
+
+@admin.register(RegularClient)
+class RegularClientAdmin(admin.ModelAdmin):
+    list_display = (
+        "client",
+        "cars_quantity",
+        "discount_percentage",
+        "car_dealership",
+    )
+    list_filter = (
+        "car_dealership__name",
+        "client__email",
+    )
+    search_fields = (
+        "car_dealership__name",
+        "client__mail",
     )

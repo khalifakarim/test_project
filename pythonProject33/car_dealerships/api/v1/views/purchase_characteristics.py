@@ -1,5 +1,4 @@
-from rest_framework import viewsets
-from rest_framework import mixins
+from rest_framework import viewsets, mixins
 
 from car_dealerships.api.v1.serializers import PurchaseCharacteristicsSerializer
 from car_dealerships.models import PurchaseCharacteristics

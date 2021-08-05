@@ -55,11 +55,27 @@ class Provider(SoftDelete, CreatedAt, UpdateAt):
     foundation_time = models.DateTimeField()
     customers = models.ManyToManyField(
         "car_dealerships.CarDealership",
+        through='RegularProviderCustomers',
+        through_fields=("provider", "customer"),
         related_name="providers",
     )
 
     def __str__(self):
         return self.name
+
+
+class RegularProviderCustomers(models.Model):
+    provider = models.ForeignKey(
+        Provider,
+        on_delete=models.CASCADE,
+        related_name='regular_customers',
+        related_query_name='provider',
+    )
+    customer = models.ForeignKey('car_dealerships.CarDealership', on_delete=models.CASCADE, related_name="promotion")
+    discount_percentage = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(100)]
+    )
+    cars_quantity = models.SmallIntegerField()
 
 
 class CarPrice(SoftDelete, CreatedAt, UpdateAt, BaseCarRelation):
