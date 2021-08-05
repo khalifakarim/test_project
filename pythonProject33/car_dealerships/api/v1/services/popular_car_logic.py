@@ -9,6 +9,7 @@ from car_dealerships.models import PurchaseCharacteristics
 from car_dealerships.models import (
     CarDealershipSale,
     CarDealershipBuy,
+    AvailableCars,
     CarDealership,
 )
 
@@ -19,7 +20,7 @@ def _check_balance(showroom, purchase_characteristics):
     for purchase_characteristic in purchase_characteristics:
         price = purchase_characteristic.provider.cars.filter(car__id=purchase_characteristic.car.id).first().price
         if showroom.balance > price:
-            lost_showroom_money(showroom, price)
+            lost_showroom_money(showroom, price, purchase_characteristic)
             create_buy_history(showroom, purchase_characteristic, price)
         else:
             raise BalanceError(showroom.name)
@@ -47,8 +48,8 @@ def _get_better_provider(cars, showroom):
             logger.warning(f"{showroom.name} does not have enough money on the balance")
 
 
-def lost_showroom_money(showroom, price):
-    CarDealership.objects.filter(id=showroom.id).update(balance=F('balance') - price)
+def lost_showroom_money(showroom, price, purchase_characteristic):
+    CarDealership.objects.filter(id=showroom.id).update(balance=F('balance') - (price * purchase_characteristic.preferred_cars_quantity))
 
 
 def create_buy_history(showroom, purchase_characteristic, price):
@@ -58,4 +59,10 @@ def create_buy_history(showroom, purchase_characteristic, price):
         price=price,
         car=purchase_characteristic.car,
         cars_quantity=1,
+    )
+    AvailableCars.objects.create(
+        car_dealership=showroom,
+        price=price,
+        cars_quantity=purchase_characteristic.preferred_cars_quantity,
+        car=purchase_characteristic.car,
     )
