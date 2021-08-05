@@ -18,4 +18,3 @@ def find_sold_cars():
             _get_sale_history(showroom)
         except SaleHistoryError:
             logger.warning(f"{showroom.name} has no sales history")
-            continue

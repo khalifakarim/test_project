@@ -13,7 +13,8 @@ def _get_car(offer):
     car = AvailableCars.objects.filter(
         car__id=offer.car.id,
         price__lte=offer.max_price,
-        cars_quantity__gt=1).order_by('price').first()
+        cars_quantity__gt=0,
+        price__gt=0).order_by('price').first()
 
     _showroom_additions_balance(car)
     _user_deduction_balance(offer.user, car.price)
