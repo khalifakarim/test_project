@@ -3,6 +3,8 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.base_user import BaseUserManager
 from django.db import models
 
+from core.managers.soft_delete import SoftDeleteManager
+from car_dealerships.models import CarDealership
 from core.enums.customer import Gender
 from provider.models import Car
 
@@ -47,6 +49,8 @@ class User(AbstractBaseUser, PermissionsMixin, SoftDelete, CreatedAt, UpdateAt):
     birthday = models.DateTimeField(null=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
+    car_dealership = models.ManyToManyField(CarDealership, through='RegularClient',
+                                            through_fields=('client', 'car_dealership'))
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = [
@@ -60,6 +64,12 @@ class User(AbstractBaseUser, PermissionsMixin, SoftDelete, CreatedAt, UpdateAt):
 
     def __str__(self):
         return self.email
+
+
+class OfferManager(SoftDeleteManager):
+
+    def check_user_offer(self, user_id):
+        return super().get_active_instance().filter(user__id=user_id)
 
 
 class Offer(SoftDelete, CreatedAt, UpdateAt):
@@ -80,3 +90,14 @@ class Offer(SoftDelete, CreatedAt, UpdateAt):
 
     def __str__(self):
         return f"{self.car} , {self.max_price}"
+
+    objects = OfferManager()
+
+
+class RegularClient(models.Model):
+    client = models.ForeignKey(User, on_delete=models.CASCADE)
+    cars_quantity = models.SmallIntegerField()
+    discount_percentage = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(100)]
+    )
+    car_dealership = models.ForeignKey(CarDealership, on_delete=models.CASCADE, related_name='regular_customers')

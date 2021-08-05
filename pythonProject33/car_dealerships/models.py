@@ -1,8 +1,11 @@
 from django_countries.fields import CountryField
 from django.db import models
 
+from car_dealerships.api.v1.services.purchase_characteristics_logic import create_purchase_characteristics
+from car_dealerships.api.v1.services.available_cars_logic import create_available_cars
 from core.abstract_models.abstract_models import BaseCarRelation, CarDealershipDeal
 from core.abstract_models.abstract_models import Action
+from core.managers.soft_delete import SoftDeleteManager
 from provider.models import Car
 
 from core.abstract_models.base_abstract_models import (
@@ -37,8 +40,22 @@ class CarDealership(SoftDelete, CreatedAt, UpdateAt):
         related_name="car_dealerships",
     )
 
+    objects = SoftDeleteManager()
+
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        create_available_cars(self)
+        create_purchase_characteristics(self)
+
+
+class PurchaseCharacteristics(SoftDelete, CreatedAt, UpdateAt):
+    provider = models.ForeignKey('provider.Provider', on_delete=models.CASCADE, related_name='showrooms_cars')
+    car_dealership = models.ForeignKey(CarDealership, on_delete=models.CASCADE, related_name='my_cars')
+    car = models.ForeignKey('provider.Car', on_delete=models.CASCADE, related_name='+')
+    preferred_cars_quantity = models.SmallIntegerField(default=1)
 
 
 class AvailableCars(SoftDelete, CreatedAt, UpdateAt, BaseCarRelation):
@@ -69,6 +86,7 @@ class CarDealershipSale(SoftDelete, CreatedAt, UpdateAt, CarDealershipDeal):
 
 
 class CarDealershipBuy(SoftDelete, CreatedAt, UpdateAt, CarDealershipDeal):
+    cars_quantity = models.PositiveSmallIntegerField()
     car_dealership = models.ForeignKey(
         CarDealership, on_delete=models.CASCADE, related_name="purchases"
     )

@@ -4,6 +4,7 @@ from car_dealerships.api.v1.serializers.available_cars import AvailableCarsSeria
 from core.serializers.base import SoftDeleteSerializer
 from car_dealerships.models import CarDealership
 from core.serializers.base import BaseSerializer
+from provider.models import Car
 
 
 class CarDealershipReadSerializer(serializers.ModelSerializer):
@@ -16,3 +17,10 @@ class CarDealershipReadSerializer(serializers.ModelSerializer):
 class CarDealershipCreateSerializer(SoftDeleteSerializer):
     class Meta(BaseSerializer.Meta):
         model = CarDealership
+
+    def validate_preferred_characteristics(self, preferred_characteristics):
+        car_characteristics = tuple(field.column for field in Car._meta.get_fields() if hasattr(field, "column"))
+
+        if not set(preferred_characteristics.keys()).issubset(car_characteristics):
+            raise serializers.ValidationError({'preferred_characteristics': 'incorrect data'})
+        return preferred_characteristics

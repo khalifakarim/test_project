@@ -25,3 +25,4 @@ class SerializerChooseMixin2:
 
     def get_serializer_class(self):
         return self.allow_serializer_class.get(self.action, self.default_serializer_class)
+

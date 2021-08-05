@@ -35,7 +35,7 @@ class ProviderAdmin(admin.ModelAdmin):
         "foundation_time",
     )
     list_filter = (
-        "cars",
+        "car",
         "is_active",
         "customers",
     )

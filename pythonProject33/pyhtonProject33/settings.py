@@ -35,6 +35,9 @@ THIRD_PARTY_APPS = [
     "django_countries",
     'debug_toolbar',
     'django_filters',
+    'django_celery_beat',
+    'django_celery_results',
+
 ]
 
 LOCAL_APPS = [
@@ -101,6 +104,27 @@ REST_FRAMEWORK = {
     ),
     'DATE_INPUT_FORMATS': ['%Y-%m-%d', ],
     'DATETIME_FORMAT': "%Y-%m-%dT%H:%M:%S.%fZ",
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'WARNING',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'WARNING'),
+            'propagate': False,
+        },
+    },
 }
 
 SIMPLE_JWT = {
@@ -180,4 +204,5 @@ DEBUG_TOOLBAR_CONFIG = {
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
 AUTH_USER_MODEL = "client.User"
