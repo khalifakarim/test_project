@@ -37,11 +37,11 @@ class RegularClientAdmin(admin.ModelAdmin):
         "discount_percentage",
         "car_dealership",
     )
-    list_filter = (
-        "car_dealership__name",
-        "client__email",
-    )
     search_fields = (
         "car_dealership__name",
         "client__mail",
+    )
+    ordering = (
+        'discount_percentage',
+        'cars_quantity',
     )

@@ -105,16 +105,16 @@ class RegularProviderCustomersAdmin(admin.ModelAdmin):
         "provider",
         "customer",
         "discount_percentage",
-        "cars_quantity",
+        "purchase_amount",
     )
-    list_filter = (
-        "provider__name",
-        "customer__name",
-        "discount_percentage",
 
-    )
     search_fields = (
         "provider__name",
         "customer__name",
+        "discount_percentage",
+    )
+
+    ordering = (
+        "purchase_amount",
         "discount_percentage",
     )

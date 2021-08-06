@@ -49,7 +49,8 @@ def _get_better_provider(cars, showroom):
 
 
 def lost_showroom_money(showroom, price, purchase_characteristic):
-    CarDealership.objects.filter(id=showroom.id).update(balance=F('balance') - (price * purchase_characteristic.preferred_cars_quantity))
+    CarDealership.objects.filter(id=showroom.id).update(
+        balance=F('balance') - (price * purchase_characteristic.preferred_cars_quantity))
 
 
 def create_buy_history(showroom, purchase_characteristic, price):
@@ -60,9 +61,7 @@ def create_buy_history(showroom, purchase_characteristic, price):
         car=purchase_characteristic.car,
         cars_quantity=1,
     )
-    AvailableCars.objects.create(
+    AvailableCars.objects.filter(
         car_dealership=showroom,
-        price=price,
-        cars_quantity=purchase_characteristic.preferred_cars_quantity,
         car=purchase_characteristic.car,
-    )
+    ).update(cars_quantity=purchase_characteristic.preferred_cars_quantity)

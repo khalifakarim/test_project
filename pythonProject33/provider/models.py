@@ -64,18 +64,18 @@ class Provider(SoftDelete, CreatedAt, UpdateAt):
         return self.name
 
 
-class RegularProviderCustomers(models.Model):
+class RegularProviderCustomers(SoftDelete, CreatedAt, UpdateAt):
     provider = models.ForeignKey(
         Provider,
         on_delete=models.CASCADE,
         related_name='regular_customers',
-        related_query_name='provider',
+        related_query_name='regular_car_dealership',
     )
-    customer = models.ForeignKey('car_dealerships.CarDealership', on_delete=models.CASCADE, related_name="promotion")
+    customer = models.ForeignKey('car_dealerships.CarDealership', on_delete=models.CASCADE, related_name="promotions")
     discount_percentage = models.IntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(100)]
     )
-    cars_quantity = models.SmallIntegerField()
+    purchase_amount = models.PositiveSmallIntegerField()
 
 
 class CarPrice(SoftDelete, CreatedAt, UpdateAt, BaseCarRelation):
