@@ -1,16 +1,22 @@
 from rest_framework import viewsets, mixins
 
-from car_dealerships.api.v1.serializers import PurchaseCharacteristicsSerializer
 from car_dealerships.models import PurchaseCharacteristics
-from core.views.mixins.base import SoftDeleteMixin
+from core.views.mixins.base import SoftDeleteMixin, SerializerChooseMixin
+
+from car_dealerships.api.v1.serializers import (
+    PurchaseCharacteristicsReadSerializer,
+    PurchaseCharacteristicsCreateSerializer,
+)
 
 
 class PurchaseCharacteristicsViewSet(
     SoftDeleteMixin,
-    mixins.UpdateModelMixin,
+    SerializerChooseMixin,
     mixins.ListModelMixin,
     mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
     viewsets.GenericViewSet,
 ):
-    serializer_class = PurchaseCharacteristicsSerializer
     queryset = PurchaseCharacteristics.objects.all()
+    read_only_serializer = PurchaseCharacteristicsReadSerializer
+    write_serializer = PurchaseCharacteristicsCreateSerializer

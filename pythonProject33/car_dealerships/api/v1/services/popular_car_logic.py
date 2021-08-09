@@ -61,14 +61,14 @@ def lost_showroom_money(showroom, price, purchase_characteristic):
 def update_regular_provider_customer(purchase_characteristic, showroom):
     regular_provider = RegularProviderCustomer.objects.filter(provider=purchase_characteristic.provider,
                                                               customer=showroom)
-    discount_percentage = Provider.objects.filter(pk=purchase_characteristic.provider.pk).values('discount_percentage')
+    discount_percentage = Provider.objects.filter(id=purchase_characteristic.provider.id).values('promotion').all()
 
     if not regular_provider:
         RegularProviderCustomer.objects.create(
             provider=purchase_characteristic.provider,
             customer=showroom,
             purchase_amount=purchase_characteristic.preferred_cars_quantity,
-            discount_percentage=int(discount_percentage[str(purchase_characteristic.preferred_cars_quantity)])
+            discount_percentage=int(discount_percentage[purchase_characteristic.preferred_cars_quantity])
         )
 
     purchase_amount = RegularProviderCustomer.objects.filter(
