@@ -51,13 +51,14 @@ class Car(SoftDelete, CreatedAt, UpdateAt):
 
 
 class Provider(SoftDelete, CreatedAt, UpdateAt):
+    promotion = models.JSONField()
     name = models.CharField(max_length=150, unique=True)
     description = models.TextField(blank=True)
     foundation_time = models.DateTimeField()
     customers = models.ManyToManyField(
         "car_dealerships.CarDealership",
         through='RegularProviderCustomer',
-        through_fields=("provider", "customer", ),
+        through_fields=("provider", "customer",),
         related_name="providers",
     )
 

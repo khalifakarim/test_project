@@ -7,28 +7,25 @@ from django.core.exceptions import ObjectDoesNotExist
 from provider.models import (
     RegularProviderCustomer,
     ProviderAction,
+
     CarPrice,
 )
 
 logger = logging.getLogger(__name__)
 
 
-def create_purchase_characteristics(showroom):
-    from car_dealerships.models import AvailableCars
-    available_cars = AvailableCars.objects.filter(car_dealership=showroom)
-    get_better_providers(available_cars, showroom)
-
-
 def get_better_providers(available_cars, showroom):
-    for available_car in available_cars:
-        get_better_offer(available_car, showroom)
+    try:
+        for available_car in available_cars:
+            get_better_offer(available_car, showroom)
+    except BestPriceError:
+        logger.warning(f"does not have enough money on the balance")
 
 
 def get_better_offer(available_car, showroom):
     action = get_better_action(available_car)
-    promotion = get_better_promotion(available_car, showroom)
     price = get_better_price(available_car)
-    best_price = {**promotion, **action, **price}
+    best_price = {**action, **price}
 
     if not best_price:
         raise BestPriceError()
@@ -45,10 +42,10 @@ def get_better_action(available_car):
     for car_price in car_prices:
         try:
             provider_action = ProviderAction.objects.get(car=car_price.car, provider=car_price.provider)
+            total_price = car_price.price * (decimal.Decimal(provider_action.discount_percentage / 100))
+            better_action_price[total_price] = provider_action.provider
         except ObjectDoesNotExist:
-            logger.warning(f"{provider_action.provider.name} does not have action on this car")
-        total_price = car_price.price * (decimal.Decimal(provider_action.discount_percentage / 100))
-        better_action_price[total_price] = provider_action.provider
+            logger.warning(f" does not have action on this car")
 
     if not better_action_price:
         return {}
@@ -57,23 +54,23 @@ def get_better_action(available_car):
     return {min_price: better_action_price[min_price]}
 
 
-def get_better_promotion(available_car, showroom):
-    better_promotion_price = {}
-    car_prices = CarPrice.objects.filter(car=available_car.car)
-
-    for car_price in car_prices:
-        regular_provider_customers = RegularProviderCustomer.objects.filter(customer=showroom).order_by(
-            "-discount_percentage")
-
-        for regular_provider_customer in regular_provider_customers:
-            total_price = car_price.price * (decimal.Decimal(regular_provider_customer.discount_percentage / 100))
-            better_promotion_price[total_price] = regular_provider_customer.provider
-
-    if not better_promotion_price:
-        return {}
-
-    min_price = sorted(better_promotion_price).pop(0)
-    return {min_price: better_promotion_price[min_price]}
+# def get_better_promotion(available_car, showroom):
+#     better_promotion_price = {}
+#     car_prices = CarPrice.objects.filter(car=available_car.car)
+#
+#     for car_price in car_prices:
+#         regular_provider_customers = RegularProviderCustomer.objects.filter(customer=showroom).order_by(
+#             "-discount_percentage")
+#
+#         for regular_provider_customer in regular_provider_customers:
+#             total_price = car_price.price * (decimal.Decimal(regular_provider_customer.discount_percentage / 100))
+#             better_promotion_price[total_price] = regular_provider_customer.provider
+#
+#     if not better_promotion_price:
+#         return {}
+#
+#     min_price = sorted(better_promotion_price).pop(0)
+#     return {min_price: better_promotion_price[min_price]}
 
 
 def get_better_price(available_car):
