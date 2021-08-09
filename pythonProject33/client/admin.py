@@ -33,7 +33,7 @@ class OfferAdmin(admin.ModelAdmin):
 class RegularClientAdmin(admin.ModelAdmin):
     list_display = (
         "client",
-        "cars_quantity",
+        "purchase_amount",
         "discount_percentage",
         "car_dealership",
     )
@@ -42,6 +42,6 @@ class RegularClientAdmin(admin.ModelAdmin):
         "client__mail",
     )
     ordering = (
-        'discount_percentage',
-        'cars_quantity',
+        "-discount_percentage",
+        '-purchase_amount',
     )

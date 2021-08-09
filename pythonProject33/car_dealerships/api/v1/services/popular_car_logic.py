@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 def _check_balance(showroom, purchase_characteristics):
     for purchase_characteristic in purchase_characteristics:
         price = purchase_characteristic.provider.cars.filter(car__id=purchase_characteristic.car.id).first().price
+        price = purchase_characteristic.preferred_cars_quantity * price
         if showroom.balance > price:
             lost_showroom_money(showroom, price, purchase_characteristic)
             create_buy_history(showroom, purchase_characteristic, price)

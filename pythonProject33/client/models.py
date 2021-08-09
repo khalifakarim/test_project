@@ -3,6 +3,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.base_user import BaseUserManager
 from django.db import models
 
+from core.abstract_models.abstract_models import RegularCustomers
 from core.managers.soft_delete import SoftDeleteManager
 from car_dealerships.models import CarDealership
 from core.enums.customer import Gender
@@ -94,10 +95,6 @@ class Offer(SoftDelete, CreatedAt, UpdateAt):
     objects = OfferManager()
 
 
-class RegularClient(models.Model):
+class RegularClient(RegularCustomers, SoftDelete, UpdateAt, CreatedAt):
     client = models.ForeignKey(User, on_delete=models.CASCADE)
-    cars_quantity = models.SmallIntegerField()
-    discount_percentage = models.IntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(100)]
-    )
     car_dealership = models.ForeignKey(CarDealership, on_delete=models.CASCADE, related_name='regular_customers')

@@ -1,6 +1,7 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
+from core.abstract_models.abstract_models import RegularCustomers
 from core.abstract_models.abstract_models import BaseCarRelation
 from core.abstract_models.abstract_models import Action
 from core.enums.car import Carcase, State, Engine
@@ -55,8 +56,8 @@ class Provider(SoftDelete, CreatedAt, UpdateAt):
     foundation_time = models.DateTimeField()
     customers = models.ManyToManyField(
         "car_dealerships.CarDealership",
-        through='RegularProviderCustomers',
-        through_fields=("provider", "customer"),
+        through='RegularProviderCustomer',
+        through_fields=("provider", "customer", ),
         related_name="providers",
     )
 
@@ -64,7 +65,7 @@ class Provider(SoftDelete, CreatedAt, UpdateAt):
         return self.name
 
 
-class RegularProviderCustomers(SoftDelete, CreatedAt, UpdateAt):
+class RegularProviderCustomer(RegularCustomers, SoftDelete, CreatedAt, UpdateAt):
     provider = models.ForeignKey(
         Provider,
         on_delete=models.CASCADE,
@@ -72,10 +73,6 @@ class RegularProviderCustomers(SoftDelete, CreatedAt, UpdateAt):
         related_query_name='regular_car_dealership',
     )
     customer = models.ForeignKey('car_dealerships.CarDealership', on_delete=models.CASCADE, related_name="promotions")
-    discount_percentage = models.IntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(100)]
-    )
-    purchase_amount = models.PositiveSmallIntegerField()
 
 
 class CarPrice(SoftDelete, CreatedAt, UpdateAt, BaseCarRelation):

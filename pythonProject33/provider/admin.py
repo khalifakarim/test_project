@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from provider.models import (
-    RegularProviderCustomers,
+    RegularProviderCustomer,
     ProviderAction,
     Manufacturer,
     Provider,
@@ -99,7 +99,7 @@ class CarPriceAdmin(admin.ModelAdmin):
     )
 
 
-@admin.register(RegularProviderCustomers)
+@admin.register(RegularProviderCustomer)
 class RegularProviderCustomersAdmin(admin.ModelAdmin):
     list_display = (
         "provider",
