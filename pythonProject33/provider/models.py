@@ -1,6 +1,7 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
+from core.abstract_models.abstract_models import RegularCustomers
 from core.abstract_models.abstract_models import BaseCarRelation
 from core.abstract_models.abstract_models import Action
 from core.enums.car import Carcase, State, Engine
@@ -50,16 +51,29 @@ class Car(SoftDelete, CreatedAt, UpdateAt):
 
 
 class Provider(SoftDelete, CreatedAt, UpdateAt):
+    promotion = models.JSONField()
     name = models.CharField(max_length=150, unique=True)
     description = models.TextField(blank=True)
     foundation_time = models.DateTimeField()
     customers = models.ManyToManyField(
         "car_dealerships.CarDealership",
+        through='RegularProviderCustomer',
+        through_fields=("provider", "customer",),
         related_name="providers",
     )
 
     def __str__(self):
         return self.name
+
+
+class RegularProviderCustomer(RegularCustomers, SoftDelete, CreatedAt, UpdateAt):
+    provider = models.ForeignKey(
+        Provider,
+        on_delete=models.CASCADE,
+        related_name='regular_customers',
+        related_query_name='regular_car_dealership',
+    )
+    customer = models.ForeignKey('car_dealerships.CarDealership', on_delete=models.CASCADE, related_name="promotions")
 
 
 class CarPrice(SoftDelete, CreatedAt, UpdateAt, BaseCarRelation):

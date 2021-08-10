@@ -1,3 +1,4 @@
+from car_dealerships.api.v1.views.purchase_characteristics import PurchaseCharacteristicsViewSet
 from car_dealerships.api.v1.views.car_dealership_action import CarDealershipActionViewSet
 from car_dealerships.api.v1.views.car_dealership_sale import CarDealershipSaleViewSet
 from car_dealerships.api.v1.views.car_dealership_buy import CarDealershipBuyViewSet

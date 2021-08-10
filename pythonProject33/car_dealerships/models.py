@@ -1,8 +1,6 @@
 from django_countries.fields import CountryField
 from django.db import models
 
-from car_dealerships.api.v1.services.purchase_characteristics_logic import create_purchase_characteristics
-from car_dealerships.api.v1.services.available_cars_logic import create_available_cars
 from core.abstract_models.abstract_models import BaseCarRelation, CarDealershipDeal
 from core.abstract_models.abstract_models import Action
 from core.managers.soft_delete import SoftDeleteManager
@@ -29,6 +27,7 @@ class Location(models.Model):
 
 
 class CarDealership(SoftDelete, CreatedAt, UpdateAt):
+    promotion = models.JSONField()
     name = models.CharField(max_length=150, unique=True)
     balance = models.DecimalField(max_digits=10, decimal_places=2)
     location = models.ForeignKey(
@@ -44,11 +43,6 @@ class CarDealership(SoftDelete, CreatedAt, UpdateAt):
 
     def __str__(self):
         return self.name
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        create_available_cars(self)
-        create_purchase_characteristics(self)
 
 
 class PurchaseCharacteristics(SoftDelete, CreatedAt, UpdateAt):

@@ -3,6 +3,11 @@ from car_dealerships.api.v1.serializers.car_dealership_buy import CarDealershipB
 from car_dealerships.api.v1.serializers.available_cars import AvailableCarsSerializer
 from car_dealerships.api.v1.serializers.location import LocationSerializer
 
+from car_dealerships.api.v1.serializers.purchase_characteristics import (
+    PurchaseCharacteristicsReadSerializer,
+    PurchaseCharacteristicsCreateSerializer,
+)
+
 from car_dealerships.api.v1.serializers.car_dealership_action import (
     CarDealershipActionReadSerializer,
     CarDealershipActionCreateSerializer,

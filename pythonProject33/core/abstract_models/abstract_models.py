@@ -1,4 +1,5 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
+
 from django.db import models
 
 
@@ -44,6 +45,16 @@ class CarDealershipDeal(models.Model):
         related_name="+",
         null=True,
     )
+
+    class Meta:
+        abstract = True
+
+
+class RegularCustomers(models.Model):
+    discount_percentage = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(100)]
+    )
+    purchase_amount = models.PositiveSmallIntegerField()
 
     class Meta:
         abstract = True

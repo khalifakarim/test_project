@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 from provider.models import (
+    RegularProviderCustomer,
     ProviderAction,
     Manufacturer,
     Provider,
@@ -95,4 +96,25 @@ class CarPriceAdmin(admin.ModelAdmin):
         "car__model",
         "car__state",
         "car__carcase",
+    )
+
+
+@admin.register(RegularProviderCustomer)
+class RegularProviderCustomersAdmin(admin.ModelAdmin):
+    list_display = (
+        "provider",
+        "customer",
+        "discount_percentage",
+        "purchase_amount",
+    )
+
+    search_fields = (
+        "provider__name",
+        "customer__name",
+        "discount_percentage",
+    )
+
+    ordering = (
+        "purchase_amount",
+        "discount_percentage",
     )
